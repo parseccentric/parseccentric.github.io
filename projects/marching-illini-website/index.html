@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<meta name="robots" content="noindex" />
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Web Dev - Brandon Dang</title>
+    <link
+      href="https://fonts.googleapis.com/css?family=Fjalla+One"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <style id="jsbin-css">
+      * {
+        font-family: "Fjalla One";
+        /*border: 1px solid red;*/
+        transition: all 0.24s ease;
+      }
+
+      body {
+        background-color: #fff;
+      }
+
+      .sidebar-tile {
+        border-radius: 20px;
+        cursor: pointer;
+        display: block;
+        height: 150px;
+        margin: 10px;
+        position: relative;
+        width: 300px;
+      }
+      .sidebar-tile > img {
+        border-radius: 10px;
+        height: 100%;
+        left: 0;
+        object-fit: cover;
+        top: 0;
+        width: 100%;
+      }
+      .sidebar-tile > span {
+        /*backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);*/
+        border-radius: 20px;
+        color: white;
+        font-size: 2em;
+        height: 100%;
+        line-height: 150px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        text-shadow: 0 1px 1.7em rgba(0, 0, 0, 1);
+        bottom: 0;
+        vertical-align: bottom;
+        width: 100%;
+      }
+      .sidebar-tile > span::after {
+        content: "";
+      }
+      .sidebar-tile > p {
+        position: absolute;
+        /*backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);*/
+        box-sizing: border-box;
+        color: transparent;
+        font-size: 1em;
+        position: absolute;
+        padding: 20px 20px;
+        text-align: left;
+        text-shadow: 0 1px 2em rgba(0, 0, 0, 0);
+        top: 0;
+        width: 100%;
+      }
+      .sidebar-tile > p::after {
+      }
+
+      .sidebar-tile:hover {
+        /*box-shadow: 0 0 100px rgba(0,0,0,0.25);*/
+      }
+      .sidebar-tile:hover > img {
+        -webkit-filter: sepia(1) hue-rotate(197deg) brightness(0.7)
+          saturate(2.5);
+      }
+      .sidebar-tile:hover > span {
+        color: white;
+        /*background: rgba(0, 0, 153, 0.5);*/
+        bottom: 0;
+        content: "MARCH WITH US >>";
+        font-size: 0.8em;
+        height: 2.5em;
+        line-height: 2em;
+        position: absolute;
+        text-shadow: 0 0 3em rgba(255, 255, 255, 0);
+        text-transform: all-caps;
+        vertical-align: bottom;
+        width: 50%;
+      }
+      .sidebar-tile:hover > span::after {
+        content: " >>";
+        color: white;
+      }
+      .sidebar-tile:hover > p {
+        color: white;
+        text-shadow: 0 1px 2em rgba(0, 0, 0, 1);
+      }
+      .sidebar-tile:hover > p:after {
+        text-shadow: 0 0 3em rgba(255, 255, 255, 1);
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .sidebar-tile:active {
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+      }
+      .sidebar-tile:active > img {
+        -webkit-filter: sepia(1) hue-rotate(210deg) brightness(0.5)
+          saturate(2.5);
+      }
+      .sidebar-tile:active > span {
+        /*background: rgba(0, 0, 153, 0.75);*/
+      }
+      .sidebar-tile:active > p {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .sidebar-tile:active > p:after {
+        color: rgba(255, 255, 255, 0.5);
+        text-shadow: 0 0 1em rgba(255, 255, 255, 0);
+      }
+
+      * {
+        font-family: "Fjalla One";
+        /*border: 1px solid red;*/
+        transition: all 0.24s ease;
+      }
+
+      .sidebar-countdown {
+        border-radius: 20px;
+        cursor: pointer;
+        display: block;
+        height: 150px;
+        margin-top: 20px;
+        position: relative;
+        width: 300px;
+      }
+      .sidebar-countdown > img {
+        border-radius: 10px;
+        height: 100%;
+        left: 0;
+        object-fit: cover;
+        top: 0;
+        width: 100%;
+      }
+      .sidebar-countdown > span {
+        /*backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);*/
+        border-radius: 20px;
+        color: white;
+        font-size: 2em;
+        height: 100%;
+        line-height: 150px;
+        position: absolute;
+        right: 0;
+        text-align: center;
+        text-shadow: 0 1px 2em rgba(0, 0, 0, 1);
+        bottom: 0;
+        vertical-align: bottom;
+        width: 100%;
+      }
+      .sidebar-countdown > span::after {
+        content: "";
+      }
+      .sidebar-countdown > p {
+        position: absolute;
+        /*backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);*/
+        box-sizing: border-box;
+        color: transparent;
+        font-size: 1em;
+        position: absolute;
+        padding: 20px 20px;
+        text-align: left;
+        text-shadow: 0 1px 2em rgba(0, 0, 0, 0);
+        top: 0;
+        width: 100%;
+      }
+      .sidebar-countdown > p::after {
+      }
+
+      .sidebar-countdown:hover {
+        /*box-shadow: 0 0 100px rgba(0,0,0,0.25);*/
+      }
+      .sidebar-countdown:hover > img {
+        -webkit-filter: sepia(1) hue-rotate(197deg) brightness(0.7)
+          saturate(2.5);
+      }
+      .sidebar-countdown:hover > span {
+        color: white;
+        /*background: rgba(0, 0, 153, 0.5);*/
+        bottom: 0;
+        content: "MARCH WITH US >>";
+        font-size: 0.8em;
+        height: 2.5em;
+        line-height: 2em;
+        position: absolute;
+        text-shadow: 0 0 3em rgba(255, 255, 255, 0);
+        text-transform: all-caps;
+        vertical-align: bottom;
+        width: 50%;
+      }
+      .sidebar-countdown:hover > span::after {
+        content: " >>";
+        color: white;
+      }
+      .sidebar-countdown:hover > p {
+        color: white;
+        text-shadow: 0 1px 2em rgba(0, 0, 0, 1);
+      }
+      .sidebar-countdown:hover > p:after {
+        text-shadow: 0 0 3em rgba(255, 255, 255, 1);
+        color: rgba(255, 255, 255, 1);
+      }
+
+      .sidebar-countdown:active {
+        box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+      }
+      .sidebar-countdown:active > img {
+        -webkit-filter: sepia(1) hue-rotate(210deg) brightness(0.5)
+          saturate(2.5);
+      }
+      .sidebar-countdown:active > span {
+        /*background: rgba(0, 0, 153, 0.75);*/
+      }
+      .sidebar-countdown:active > p {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .sidebar-countdown:active > p:after {
+        color: rgba(255, 255, 255, 0.5);
+        text-shadow: 0 0 1em rgba(255, 255, 255, 0);
+      }
+    </style>
+  </head>
+  <body>
+    Note: I do not own the images below. Please do not reuse these images unless you have written consent from the image creator. If you would like me to take down the images, please email me.
+
+    <a
+      class="sidebar-tile"
+      href="http://marchingillini.com/how-to-join/general-information"
+    >
+      <img src="./mi-march.jpg" />
+      <span>MARCH WITH US</span>
+      <p>
+        Learn how to join the band, what life is like in the Marching Illini,
+        and about other opportunities through Fighting Illini Athletic Bands.
+      </p>
+    </a>
+    <a class="sidebar-tile" href="http://marchingillini.com/events">
+      <img src="./mi-experience.jpg" />
+      <span>SEE SPECIAL EVENTS</span>
+      <p>
+        Get the details on this season's variety of surprises, like special
+        guests, parades, ceremonies, or exhibition performances.
+      </p>
+    </a>
+    <a class="sidebar-tile" href="http://marchingillini.com/tradition">
+      <img src="./mi-learn.jpg" />
+      <span>LEARN ABOUT US</span>
+      <p>
+        Read about the rich and historic past of the world's first college
+        marching band, along with the traditions and innovations formed along
+        the way.
+      </p>
+    </a>
+    <a class="sidebar-tile" href="http://marchingillini.com/media">
+      <img src="./mi-follow.jpg" />
+      <span>FOLLOW US</span>
+      <p>
+        Get the latest scoop on our performances, rehearsals, and endeavors on
+        and off the field, like the annual Marching Illini Sousaphone 5K.
+      </p>
+    </a>
+    <a class="sidebar-tile" href="http://marchingillini.com/calendar-of-events">
+      <img src="./mi-experience.jpg" />
+      <span>EXPERIENCE US</span>
+      <p>
+        See dramatic visuals materialize, feel powerful music in the stands, or
+        march with us to Memorial Stadium -- there's nothing like the Marching
+        Illini live.
+      </p>
+    </a>
+    <a class="sidebar-tile" href="http://marchingillini.com/giving">
+      <img src="./mi-support.jpg" />
+      <span>SUPPORT US</span>
+      <p>
+        From purchasing merchandise to sharing hashtags, learn more about all
+        the ways you can make a difference in moving the Marching Illini
+        forward.
+      </p>
+    </a>
+    <a class="sidebar-countdown" href="http://marchingillini.com/giving">
+      <img src="./mi-preseason.jpg" />
+      <span>PRESEASON CAMP</span>
+      <p>
+        Get hyped for this season's historic week of record talent for music and
+        marching, all while joining together as an Illini family like none
+        other.
+      </p>
+      <div class="sidebar-countdown-timer"></div>
+    </a>
+    <a class="sidebar-countdown" href="http://marchingillini.com/giving">
+      <img src="./mi-sectional.jpg" />
+      <span>JULY 30TH SECTIONAL</span>
+      <p>
+        You won't want to miss this opportunity to get an early taste of what
+        the 2016 season has to offer. Practice with a large ensemble and meet up
+        with fellow section members.
+      </p>
+      <div class="sidebar-countdown-timer"></div>
+    </a>
+  </body>
+</html>

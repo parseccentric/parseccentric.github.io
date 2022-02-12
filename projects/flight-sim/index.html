@@ -1,0 +1,211 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+<head>
+<title>mp2 </title>
+<meta charset="utf-8"> 
+<style type="text/css">
+* {
+    font-family: -apple-system, BlinkMacSystemFont, 
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
+    "Fira Sans", "Droid Sans", "Helvetica Neue", 
+    sans-serif;
+}
+#debugDiv {
+    background: rgba(0, 0, 0, 0.4);
+    bottom: 0;
+    color: white;
+    display: block;
+    left: 0;
+    padding: 1em;
+    position: fixed;
+    width: 100%;
+    z-index: 2;
+}
+#debug-metricRoll, #debug-metricPitch, #debug-metricYaw {
+    display: inline-block;
+    float: left;
+    width: 33%;
+}
+#debug-metricLookAt, #debug-metricSpeed {
+    display: inline-block;
+    float: left;
+    width: 50%;
+    height: 140px;
+}
+</style>
+</head>
+
+    
+<script id="shader-vs" type="x-shader/x-vertex">
+   attribute vec3 aVertexNormal;
+   attribute vec3 aVertexPosition;
+   attribute vec4 aVertexColor;
+   
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+    
+    uniform vec3 uLightPosition;
+    
+    varying vec3 vertexPositionEye3;
+    varying vec3 L;
+    varying vec3 N;
+    
+    
+    varying vec4 vColor;
+
+    void main(void) {
+    
+    // Get the vertex position in eye coordinates
+    vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+    vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+    
+    //Calculate L dot N.
+    L = -normalize(vertexPositionEye3 - uLightPosition);
+    N = -normalize(uNMatrix * aVertexNormal);
+  
+    //Calculate ambTerm + difTerm + specTerm
+    vColor = aVertexColor;
+    
+     gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    }
+</script>
+  
+<script id="shader-fs1" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor;
+varying vec3 vertexPositionEye3;
+varying vec3 L;
+varying vec3 N;
+
+uniform vec3 uAmbientLightColor;
+uniform vec3 uDiffuseLightColor;
+uniform vec3 uSpecularLightColor;
+
+const float alpha = 256.0;
+
+void main(void) {
+        float ldotn = dot(L, N);
+
+        //Calculate R dot V to the alpha.
+        vec3 R = -normalize(reflect(-L, N));
+        vec3 V = -normalize(vertexPositionEye3);
+        float rdotv = dot(R, V);
+        float specWeight = pow(rdotv, alpha);
+
+        vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
+                 uDiffuseLightColor * ldotn +
+                 uSpecularLightColor * specWeight), 1.0);
+                 
+        const float LOGB2 = 1.442695;
+        const float fogDensity = 0.08;
+        float z = gl_FragCoord.z / gl_FragCoord.w;
+        float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
+        fogFactor = clamp(fogFactor, 0.0, 1.0);
+        vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
+         
+        gl_FragColor = mix(fogColor, vertColor, fogFactor);
+        
+        
+ }
+</script>
+  
+<script id="shader-fs2" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor;
+varying vec3 vertexPositionEye3;
+varying vec3 L;
+varying vec3 N;
+
+uniform vec3 uAmbientLightColor;
+uniform vec3 uDiffuseLightColor;
+uniform vec3 uSpecularLightColor;
+
+const float alpha = 128.0;
+
+void main(void) {
+    float ldotn = dot(L, N);
+
+    //Calculate R dot V to the alpha.
+    vec3 R = -normalize(reflect(-L, N));
+    vec3 V = -normalize(vertexPositionEye3);
+    float rdotv = dot(R, V);
+    float specWeight = pow(rdotv, alpha);
+
+    vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
+             uDiffuseLightColor * ldotn +
+             uSpecularLightColor * specWeight), 1.0);
+
+    gl_FragColor = vertColor;
+ }
+</script>
+    
+<!--<script src="invert.js"></script>-->
+<script src="gl-matrix-min.js"></script> 
+<script src="webgl-utils.js"></script>
+<script src="simpleModeling.js"></script>   
+<script src="terrainModeling2.js"></script>  
+<script src="main.js"></script>  
+<script src="simulator2.js"></script>  
+<script src="typedarray.js"></script>
+<script src="simplex-noise.js"></script>
+<script src="alea.js"></script>
+<!--<script src="plotly-latest.min.js"></script>-->
+<body onload="startup();">
+    
+    <h5>Brandon Dang / Brandon Dang presents</h5>
+    <h1>Flight Simulator</h1>
+    <h2>Version 2.0: Now with Perlin-Noise-Generated Terrain!</h2>
+    
+    <canvas id="myGLCanvas" width="800" height="800"></canvas>
+    
+    <div id="debugDiv">
+        
+        
+        <p style="max-width: 800px; color: white;">Use the arrow keys to control the roll and pitch of the aircraft, and the +/- keys to control the speed.  You can toggle the display of fog and reset the position of the aircraft with the onscreen buttons.  Move the mouse cursor over the page to set the speed to the value of the slider, which defaults to 0.</p>
+
+        <button id="fogButton">Turn Fog <span id="fogButton-status">On</span></button>
+        <button id="resetButton">Reset Aircraft</button>
+        
+        <div id="debug-metricPosition"><h2>Position: &lt;<span id="metricPosition-value">0.0, 0.0, 0.0 . . . [initial value]</span>&gt;</h2>
+        </div>
+        
+        <br>
+            
+        <div id="debug-metricLookAt"><h2>Look-At: </h2>
+            <span id="metricLookAt-value">[initial values]</span>
+        </div>
+            
+        <div id="debug-metricSpeed"><h2>Speed: <span id="metricSpeed-value">1.0000 . . . [initial value]</span></h2>
+            <input type="range" id="debug-sliderSpeed" min=-2.0 max=2.0 step=0.01 value=0.0>
+            <div id="debug-keyMinus">[ - ] Key <span id="keyMinus-value">disabled</span>.</div>
+            <div id="debug-keyPlus">[ + ] Key <span id="keyPlus-value">disabled</span>.</div>
+        </div>
+            
+        <br>
+            
+        <div id="debug-metricRoll"><h2>Roll: <span id="metricRoll-value">0.0000 . . . [initial value]</span></h2>
+            <div id="debug-arrowL">[ &#9668; ] Key <span id="arrowL-value">inactive</span>.</div>
+            <div id="debug-arrowR">[ &#9658; ] Key <span id="arrowR-value">inactive</span>.</div>
+        </div>
+        
+        <div id="debug-metricPitch"><h2>Pitch: <span id="metricPitch-value">0.0000 . . . [initial value]</span></h2> 
+            <div id="debug-arrowU">[ &#9650; ] Key <span id="arrowU-value">inactive</span>.</div>
+            <div id="debug-arrowD">[ &#9660; ] Key <span id="arrowD-value">inactive</span>.</div>
+        </div>
+            
+        <div id="debug-metricYaw"><h2>Yaw: <span id="metricYaw-value">0.0000 . . . [initial value]</span></h2> 
+            <div id="debug-keyComma">[ &lt; ] Key <span id="keyComma-value">inactive</span>.</div>
+            <div id="debug-keyPeriod">[ &gt; ] Key <span id="keyPeriod-value">inactive</span>.</div>
+        </div>
+        
+        <div id="debug-plotly">
+        </div>
+            
+        <br>
+        
+    </div>
+</body>
+
+</html>
