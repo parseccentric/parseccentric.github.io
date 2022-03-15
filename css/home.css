@@ -1,9 +1,9 @@
-@import url("http://fonts.googleapis.com/css?family=Bree+Serif|Merriweather");
-@import url("https://fonts.googleapis.com/css?family=Abril+Fatface|Archivo+Black|Arima+Madurai:500|Crete+Round|Glegoo:700|Lancelot|Patua+One|Raleway:900|Yeseva+One|Changa+One|Passion+One|Cabin:600|Heebo|Playfair+Display:900|Share|Racing+Sans+One|Roboto:900|Roboto+Slab");
+@import url("https://fonts.googleapis.com/css?family=Roboto:400,900");
 @import url("http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css");
 *{
     box-shadow:0 0 1em transparent;
     box-sizing:border-box;
+    font-family:"Roboto", sans-serif;
 }
 
 .whiteText{
@@ -142,7 +142,6 @@
 
  body{
     background-color:#fff;
-    font-family:"Roboto",sans-serif;
     padding:0
 }
 
@@ -188,7 +187,6 @@
 }
 
  #main-header.cover{
-    font-family:"Roboto";
     margin:0;
     position: absolute;
     text-align:center;
@@ -212,6 +210,7 @@
  #main-header.cover h1{
     display:block;
     font-size:4em;
+    font-weight:bolder;
     vertical-align:middle;
      transform:rotate(0deg);
 }
@@ -380,7 +379,6 @@
 
 #main-header.collapsed{
     border-radius:10px;
-    font-family:"Roboto",sans-serif;
     left:0.5em;
     height:10vh;
     margin:0.5em;
@@ -455,6 +453,7 @@
  #main-header.collapsed h1{
     display:inline-block;
     font-size:36px;
+    font-weight:900;
     left:74px;
     line-height:64px;
     margin:0 6px;
@@ -574,7 +573,6 @@
 
 @media (max-width: 500px) {
      #main-header.cover{
-        font-family:"Roboto";
         margin:0;
         position:fixed;
         text-align:center;
@@ -727,15 +725,6 @@
     }
 }
 
- h2 > span {
-    font-family: "Raleway"
-}
-
-;
- h2, h3{
-    font-family:"Roboto Slab",sans-serif
-}
-
 h2, h3, h4, h5, p, span {
     max-width: 720px;
 }
@@ -767,7 +756,6 @@ h2, h3, h4, h5, p, span {
 
 .main-section h3 {
     display:inline-block;
-    font-family: "Roboto Slab", serif;
     line-height: 1.5em;
     padding: 16px 0;
     position: relative;
@@ -842,7 +830,6 @@ h2, h3, h4, h5, p, span {
     border-radius:6px;
     bottom:2em;
     box-shadow:0 0 60px rgba(0,0,0,0.3);
-    font-family:"Roboto Slab",sans-serif;
     font-size:24px;
     height:80vh;
     left:2em;
@@ -1038,6 +1025,7 @@ h2, h3, h4, h5, p, span {
     color:#13294B;
     display:inline-block;
     font-size:2.5em;
+    font-weight: bolder;
     padding:0;
     margin: 72px 0;
     text-align:center;
@@ -1199,7 +1187,6 @@ h2, h3, h4, h5, p, span {
 
 .portfolio-flexChild h3{
 	bottom: 0;
-    font-family: "Roboto", sans-serif;
 	text-shadow: 0 3px 50px rgba(0,0,0,1);
 	left: 0;
 	margin: 0;
