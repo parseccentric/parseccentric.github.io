@@ -802,7 +802,7 @@ h2, h3, h4, h5, p, span {
     text-align:center
 }
 
-#overview p{
+#overview p, #availability p, #availability a{
     display:inline-block;
     font-size:2vw;
     line-height:1.5em;
@@ -811,137 +811,20 @@ h2, h3, h4, h5, p, span {
     max-width:720px
 }
 
-#featured-projects{
+#availability{
     text-align:center
 }
 
-#featured-projects .modal-link{
-    display:inline-block;
-    margin:1em
-}
-
-#featured-projects .featured-subtitle{
+#availability .featured-subtitle{
     font-variant:small-caps;
     text-transform:lowercase
 }
 
- #featured-projects .modal-content{
-    background-color:#fff;
-    border-radius:6px;
-    bottom:2em;
-    box-shadow:0 0 60px rgba(0,0,0,0.3);
-    font-size:24px;
-    height:80vh;
-    left:2em;
-    margin:auto auto;
-    padding:3em 2em 2em 2em;
-    position:fixed;
-    right:2em;
-    text-align:center;
-    width:720px;
-    z-index:3
-}
-
- #featured-projects .modal-content p{
-    display:inline-block;
-    text-align:left
-}
-
-#featured-projects .modal-close{
-    color:transparent;
-    left:0;
-    position:absolute;
-    line-height:3em;
-    text-align:center;
-    width:100%
-}
-
-#featured-projects .shown .modal-content{
-    display:block;
-    overflow-y:scroll;
-    opacity:1
-}
-
-#featured-projects .shown .modal-content img{
-    width:100%
-}
-
-#featured-projects .shown .modal-link{
-    background-color:#13294B;
-    border-radius:6px 6px 0 0;
-    color:#fff;
-    left:50%;
-    margin:0;
-    padding:1em;
-    position:fixed;
-    top:2em;
-    transform:translate(-50%, 0);
-    width:720px;
-    z-index:4
-}
-
-#featured-projects .shown .modal-link:hover{
-    color:transparent
-}
-
-#featured-projects .shown .modal-link:hover .modal-close{
-    color:#fff
-}
-
-#featured-projects .shown .modal-link:active{
-    color:transparent
-}
-
-#featured-projects .shown .modal-link:active .modal-close{
-    color:rgba(255,255,255,0.5)
-}
-
-#featured-projects .shown .content-underlay{
-    background-color:rgba(0,0,0,0.5);
-    display:block;
-    height:100vh;
-    left:0;
-    margin:0;
-    opacity:1;
-    position:fixed;
-    top:0;
-    width:100vw;
-    z-index:2
-}
-
-#featured-projects .shown .content-underlay:hover{
-    background-color:rgba(0,0,0,0.1);
+#availability a{
     cursor:pointer
 }
 
-#featured-projects .shown .content-underlay:active{
-    background-color:rgba(0,0,0,0.6);
-    cursor:pointer
-}
-
-#featured-projects .hidden .modal-link:hover .modal-open{
-    opacity:1
-}
-
-#featured-projects .hidden .modal-content{
-    overflow:hidden;
-    pointer-events:none;
-    opacity:0;
-    top:-1em
-}
-
-#featured-projects .hidden .content-underlay{
-    pointer-events:none;
-    opacity:0;
-    top:-1em
-}
-
-#featured-projects a{
-    font-size:1.5em;
-    cursor:pointer
-}
-
-#featured-projects img{
+#availability img{
     left:0;
     max-height:50%
 }
