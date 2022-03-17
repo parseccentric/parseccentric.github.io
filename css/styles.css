@@ -87,15 +87,15 @@ body div {
   z-index: 1;
 }
 
-#main-header-spacer {
-  display: block;
-  height: 80vh;
-  left: 0;
-  margin: 0;
-  position: relative;
-  right: 0;
-  top: 0;
-  width: 100%;
+#main-header-spacer{
+  display:block;
+  height:70px;
+  left:0;
+  margin:0;
+  position:relative;
+  right:0;
+  top:0;
+  width:100%
 }
 
 #main-header.cover {
@@ -121,7 +121,7 @@ body div {
 
 #main-header.cover h1 {
   display: inline-block;
-  font-size: 20vh;
+  font-size: 144px;
   font-weight: bolder;
   vertical-align: middle;
 }
@@ -189,7 +189,7 @@ body div {
 
 #main-header.cover h1 {
   display: inline-block;
-  font-size: 8vw;
+  font-size: calc(max(2vw, 12px));
   font-weight: bolder;
   left: 390px;
   margin: 0 6px;
@@ -251,7 +251,7 @@ body div {
   box-sizing: border-box;
   color: black;
   display: inline-block;
-  font-size: 2vw;
+  font-size: calc(max(2vw, 12px));
   height: 100%;
   line-height: 64px;
   margin: 0;
@@ -529,24 +529,11 @@ h1 {
   text-transform: lowercase;
 }
 
-#overview {
-  text-align: center;
-}
-
-#overview p {
-  display: inline-block;
-  font-size: 2vw;
-  line-height: 1.5em;
-  text-align: left;
-  text-decoration: none;
-  max-width: 720px;
-}
-
 article {
   font-weight: 400;
   font-size: 18px;
   line-height: 1.5em;
-  margin: 5vw;
+  margin: calc(max(5vw, 5px));
   max-width: 720px;
 }
 
@@ -626,7 +613,7 @@ img {
   text-align: left;
 }
 
-#momentous-sidebar {
+#featured-image {
   background: black;
   color: white;
   padding: calc(max(0.5vw, 10px));

@@ -337,7 +337,7 @@
     box-sizing:border-box;
     color:black;
     display:inline-block;
-    font-size:2vw;
+    font-size:calc(max(2vw, 12px));
     height:100%;
     line-height:64px;
     margin:0;
@@ -380,7 +380,7 @@
 #main-header.collapsed{
     border-radius:10px;
     left:0.5em;
-    height:10vh;
+    height:65px;
     margin:0.5em;
     padding:0 10px;
     position:fixed;
@@ -804,7 +804,7 @@ h2, h3, h4, h5, p, span {
 
 #overview p, #availability p, #availability a{
     display:inline-block;
-    font-size:2vw;
+    font-size: 18px;
     line-height:1.5em;
     text-align:left;
     text-decoration:none;
