@@ -546,7 +546,7 @@ article {
   font-weight: 400;
   font-size: 18px;
   line-height: 1.5em;
-  margin: 1in;
+  margin: 5vw;
   max-width: 720px;
 }
 
@@ -629,5 +629,5 @@ img {
 #momentous-sidebar {
   background: black;
   color: white;
-  padding: 0.5in;
+  padding: calc(max(0.5vw, 10px));
 }
