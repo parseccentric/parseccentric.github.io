@@ -7,6 +7,10 @@
   transition: all 0.25s ease, height none, display none;
 }
 
+*:focus {
+  outline: 3px solid black;
+}
+
 .whiteText {
   color: white;
 }

@@ -6,6 +6,10 @@
     font-family:"Roboto", sans-serif;
 }
 
+*:focus {
+  outline: 3px solid black;
+}
+
 .whiteText{
     color:white
 }
@@ -725,10 +729,6 @@
     }
 }
 
-h2, h3, h4, h5, p, span {
-    max-width: 720px;
-}
-
  h1{
     text-align:center
 }
@@ -746,6 +746,12 @@ h2, h3, h4, h5, p, span {
 
 .main-section .blackText .section-icon,.main-section .blackText.section-icon{
 }
+
+section {
+    max-width: 720px;
+    margin-left: auto;
+    margin-right: auto;
+  }
 
 .main-section h2 {
     display:inline-block;
@@ -803,12 +809,10 @@ h2, h3, h4, h5, p, span {
 }
 
 #overview p, #availability p, #availability a{
-    display:inline-block;
     font-size: 18px;
     line-height:1.5em;
     text-align:left;
     text-decoration:none;
-    max-width:720px
 }
 
 #availability{
@@ -836,7 +840,6 @@ h2, h3, h4, h5, p, span {
 #full-portfolio .portfolio-section{
     display:block;
     margin:auto;
-    max-width:1080px
 }
 
 #full-portfolio .section-modal{
@@ -998,7 +1001,7 @@ h2, h3, h4, h5, p, span {
 	padding: 10px 20px;
 	position: relative;
     text-decoration: none;
-    transition:all .5s ease;
+    transition:all .05s ease;
     will-change: transform;
 }
 
@@ -1010,7 +1013,7 @@ h2, h3, h4, h5, p, span {
 
 .portfolio-flexChild:active {
 	box-shadow: 0 1px 1px rgba(0,0,0,1);
-    transition: all 0.05s ease;
+    transition: all 0.02s ease;
     z-index: 99;
 }
 
@@ -1030,7 +1033,7 @@ h2, h3, h4, h5, p, span {
 
 .portfolio-flexChild:active img {
 	filter: brightness(0.6);
-    transition: all 0.05s ease;
+    transition: all 0.05s linear;
 }
 
 .portfolio-flexChild h4::after {
