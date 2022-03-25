@@ -621,4 +621,6 @@ img {
   background: black;
   color: white;
   padding: calc(max(0.5vw, 10px));
+  width: 100%; 
+  padding: calc(max(0.5vw, 10px));
 }
