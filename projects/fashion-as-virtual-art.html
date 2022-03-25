@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>WebVR for Virtision — Brandon Dang</title>
+        <link rel="stylesheet" href="../css/styles.css">
+        <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+        <link rel="shortcut icon" href="http://i.imgur.com/dbRr5yC.png" 
+              data-href="http://i.imgur.com/DvUBKyX.png" type="image/x-icon">
+
+        <!-- extra stuff from realfavicongenerator.net.  -->
+        <!--Actual favicon made by me, Brandon Dang. 
+<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5"> 
+<meta name="theme-color" content="#ffffff"> -->
+    </head>
+    <body>
+        <!-- COVER (HEADER) -->
+        <div id="main-header-spacer" class=""></div>
+        <div id="main-header" class="main-header collapsed">
+            <a id="header-logo" href="/">
+                <img id="logo-img" class="logo-img" 
+                     src="../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'"/>
+                <img id="logo-hoverImg" class="logo-img" 
+                     src="../media/logo/header-gradient.png" alt="Logo: Birdleaf mark with 'BD'"/>
+                <img id="logo-activeImg" class="logo-img" 
+                     src="../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'"/>
+            </a><h1>Brandon Dang</h1><!--
+--><div id="header-nav" class="header-nav">
+                <!-- is sticky --><!-- resizes when scrolling down. --><!-- will smooth-scroll to sections-->
+                <div id="nav-colorWrapperBlack" class="nav-colorWrapper blackBG whiteText">
+                    <a id="nav-linkOverview" href="../#overview" class="nav-link">Overview</a>
+                </div>
+                <div id="nav-colorWrapperOrange" class="nav-colorWrapper orangeBG whiteText">
+                    <a id="nav-linkFeatured" href="../#availability" class="nav-link">Availability</a>
+                </div>
+                <div id="nav-colorWrapperBlue" class="nav-colorWrapper blueBG whiteText">
+                    <a id="nav-linkPortfolio" href="../#full-portfolio" class="nav-link">Full Portfolio</a>
+                </div>
+                <div id="nav-colorWrapperGold" class="nav-colorWrapper greenBG blackText" >
+                    <a id="nav-linkInterests" href="../#my-interests" class="nav-link">My Interests</a>
+                </div>
+                <div id="nav-colorWrapperGreen" class="nav-colorWrapper yellowBG blackText" >
+                    <a id="nav-linkContact" href="../#contact-me" class="nav-link">Contact Me</a>
+                </div>
+            </div>
+        </div>
+        <article>
+            <h3 class="tag blueBG whiteText">Recent Works</h3>
+
+            <h1>Fashion as {Virtual} Art</h1>
+            <section id="featured-image">
+                <img src="../projects/??.png". style="width: 100%; background: white; padding: calc(max(0.5vw, 10px));"/>
+                <p>May 2018 - May 2019.</p>
+            </section>
+            <h1 id="summary">Summary</h1>
+            <p>I designed, prototyped, and implemented a WebXR AR application for an exhibition, Fashion as {Virtual} Art. To support the app, I created a small website and designed posters to hold the QR code to the website and a Hiro image for marker-based AR tracking.</p>
+            <p>The exhibition was designed by Professor Chiara Vincenzi using virtual garments that her students created in Tilt Brush (Open Brush). It also showed a video of the WebXR VR multiplayer critiques made possible with Project Komodo.</p>
+            <p>The software is the first example I am aware of that could display Tilt Brush garments with the correct colors, shaders, and animations on built-in mobile browsers via marker-based AR. The tilt-loader code is thanks to the folks at Icosa. I saved a copy of the experimental code because Icosa was hard at work evolving their platform. Unfortunately, partway through the exhibition, I learned the hard way that deep in the code, there was a request being made to their API, and that request was now failing because they (understandably) introduced CORS protections.</p>
+            <p>I appreciate the high level of patience and understanding of everyone involved, and I now have something to tangibly remind me to be careful with in-development and early-version third-party libraries.</p>
+            <h1 id="collaborators">Collaborators</h1>
+            <ul>
+            <li>Professor Chiara Vincenzi</li>
+            <li>ARTS 221 (Spring 2021) Students</li>
+            </ul>
+            <h1 id="technologies-and-tools">Technologies and Tools</h1>
+            <h2 id="development-technologies">Development Technologies</h2>
+            <ul>
+            <li>A-Frame</li>
+            <li>CSS</li>
+            <li>HTML</li>
+            <li>JS</li>
+            <li>ThreeJS</li>
+            </ul>
+            <p><strong>WebXR AR Platforms</strong></p>
+            <ul>
+            <li>Android Chrome</li>
+            <li>iOS Safari</li>
+            </ul>
+            <p><strong>Other Development Technologies</strong></p>
+            <ul>
+            <li>AR.js</li>
+            <li>Icosa Gallery API</li>
+            <li>WebXR AR</li>
+            </ul>
+            <h2 id="tools">Tools</h2>
+            <p>Google Docs</p>
+        </article>
+
+        <script src="../lib/jquery-2.1.3.min/index.js"></script>
+        <script src="../js/script.js"></script>
+        <script src="http://localhost:35729/livereload.js"></script>
+    </body>
+</html>
