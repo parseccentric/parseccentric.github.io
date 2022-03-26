@@ -624,3 +624,11 @@ img {
   width: 100%; 
   padding: calc(max(0.5vw, 10px));
 }
+
+/* Sortable tables */
+table.sortable thead {
+  background-color:#eee;
+  color:#666666;
+  font-weight: bold;
+  cursor: default;
+}
