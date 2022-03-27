@@ -541,6 +541,10 @@ article {
   max-width: 720px;
 }
 
+article.wide {
+  max-width: 1080px;
+}
+
 h,
 h1,
 h2,
@@ -626,6 +630,10 @@ img {
 }
 
 /* Sortable tables */
+
+table.sortable {
+  max-width: 1080px;
+}
 
 table.sortable thead {
   background-color:#aaa;
