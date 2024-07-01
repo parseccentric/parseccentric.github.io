@@ -908,7 +908,7 @@ section {
 }
 
 #contact-me #contact-methods a{
-    color:#13294B;
+    color:#222;
     display:inline-block;
     font-size:2.5em;
     font-weight: bolder;
@@ -927,7 +927,7 @@ section {
 }
 
 #contact-me #contact-methods a:hover{
-    color:#E04E39
+    color:rgba(0,0,0,0.5)
 }
 
 #contact-me #contact-methods a:active{
