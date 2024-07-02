@@ -738,7 +738,7 @@
     display:block;
     height:auto;
     position: relative;
-    text-align:center
+    padding: 3em;
 }
 
 .main-section .whiteText .section-icon,.main-section .whiteText.section-icon{
@@ -755,7 +755,6 @@ section {
 
 .main-section h2 {
     display:inline-block;
-    padding: 64px 0;
     position: relative;
     text-align:left
 }
@@ -795,13 +794,13 @@ section {
 
 .section-header {
     display: block;
-    padding-top: 72px;
     position: relative;
     width: 100%;
 }
 
 .sub-section {
-    padding-bottom: 72px;
+    padding: 1em;
+    border-radius: 10px;
 }
 
 #overview{
@@ -828,18 +827,10 @@ section {
     cursor:pointer
 }
 
-#availability img{
-    left:0;
-    max-height:50%
-}
-
-#full-portfolio{
-    text-align:center
-}
-
 #full-portfolio .portfolio-section{
     display:block;
-    margin:auto;
+    margin: 3em;
+  border-radius: 10px;
 }
 
 #full-portfolio .section-modal{
@@ -939,12 +930,6 @@ section {
     top:1px
 }
 
-.main-footer{
-    display:block;
-    height:calc(100vh - 64px - 1.5em);
-    text-align:center
-}
-
 .main-footer .section-icon{
     font-variant:small-caps;
     text-transform:lowercase
@@ -954,10 +939,6 @@ section {
     display:inline-block;
     padding:64px 0;
     text-align:left
-}
-
- body div h2 {
-    margin: 0 2em;
 }
 
 .whiteBG {
@@ -983,7 +964,6 @@ section {
   justify-content: center;
   align-items: stretch;
   align-content: center;
-  margin-top: 72px;
 }
 
 .portfolio-flexParent:after {
