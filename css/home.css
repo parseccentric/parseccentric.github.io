@@ -925,6 +925,9 @@ section {
     font-variant:small-caps;
     text-transform:lowercase
 }
+#contact-me #contact-methods a img {
+	width: 30px;
+}
 
 #contact-me #contact-methods a:hover{
     color:rgba(0,0,0,0.5)
