@@ -226,7 +226,6 @@ body div {
 }
 
 #main-header.cover #header-nav div:active {
-  height: calc($height-header - 6px);
   transform: translate(0, 3px);
 }
 
@@ -406,7 +405,6 @@ body div {
 }
 
 #main-header.collapsed #header-nav div:active {
-  height: calc($height-header - 6px);
   transform: translate(0, 3px);
 }
 
