@@ -654,3 +654,16 @@ table.sortable td {
   background-color: #eee;
   padding: 0.5em;
 }
+
+.gallery-right {
+  float: left;
+  height: 400px;
+  border: 10px solid black;
+  margin-left: 20px;
+}
+
+.gallery-wide {
+  width: 100%;
+  background: white;
+  padding: calc(max(0.5vw, 10px));
+}
