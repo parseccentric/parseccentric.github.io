@@ -667,3 +667,15 @@ table.sortable td {
   background: white;
   padding: calc(max(0.5vw, 10px));
 }
+
+.clear-left {
+  clear: left;
+}
+
+.clear-right {
+  clear: right;
+}
+
+.clear-both {
+  clear: both;
+}
