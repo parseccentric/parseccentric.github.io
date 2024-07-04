@@ -313,7 +313,6 @@
 }
 
 #main-header.cover #header-nav div:active{
-    height:calc($height-header - 6px);
     transform:translate(0, 3px)
 }
 
@@ -491,7 +490,6 @@
 }
 
 #main-header.collapsed #header-nav div:active{
-    height:calc($height-header - 6px);
     transform:translate(0, 3px)
 }
 
@@ -1107,15 +1105,3 @@ section {
 	padding: 10px 20px;
 	position: relative;
 }
-
- #if defined(ENABLE_METER_ELEMENT) && ENABLE_METER_ELEMENT 
-/* meter */
- meter {
-     -webkit-appearance: meter;
-}
-
- meter::-webkit-meter-inner-element {
-     background: black;
-}
-
- #endif
