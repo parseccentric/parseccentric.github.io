@@ -340,8 +340,7 @@ table.sortable td {
 
 .gallery-right {
   float: right;
-  height: 400px;
-  border: 10px solid black;
+  max-width: 25%;
   margin-left: 20px;
 }
 
