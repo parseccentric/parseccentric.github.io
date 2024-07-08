@@ -1105,3 +1105,27 @@ section {
 	padding: 10px 20px;
 	position: relative;
 }
+
+.chip {
+    background: rgba(255,255,255,0.1);
+    border-radius: 2em;
+    padding: 0.5em 1em;
+}
+
+.chip:hover {
+    background: rgba(255,255,255,1);
+    transform: translate(-5px, 0);
+}
+
+.chip:active {
+    background: rgba(140, 140, 140, 0.5);
+    transform: translate(2px, 0);
+}
+
+.whiteLinks .chip:hover {
+    color: black;
+}
+
+.whiteLinks .chip:active {
+    color: black;
+}
