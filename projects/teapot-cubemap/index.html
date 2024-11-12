@@ -1,0 +1,232 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+<head>
+<title>bcdang2 MP3B - Rebooted</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+<meta charset="utf-8"> 
+</head>
+
+<!-- Skybox Shaders -->
+<script id="shaderSkybox-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexNormal;
+    attribute vec3 aVertexPosition;
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat4 uNMatrix;
+    
+    varying vec3 vVertexNormal;
+    void main(void) {
+        vVertexNormal = aVertexNormal; 
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
+    }
+</script>
+  
+<script id="shaderSkybox-fs" type="x-shader/x-fragment">
+    precision mediump float;
+    uniform samplerCube uCubeSampler; 
+    varying vec3 vVertexNormal; 
+
+    void main(void) {
+        gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
+    }
+</script>    
+
+<!-- Teapot Shaders -->
+<script id="shader-vs" type="x-shader/x-vertex">
+    attribute vec3 aVertexNormal;
+    attribute vec3 aVertexPosition;
+    attribute vec4 aVertexColor;
+
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uMVMatrixT;
+    uniform mat4 uMVMatrixL;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+
+    uniform vec3 uLightPosition;
+
+    varying vec3 vertexPositionEye3;
+    varying vec3 L;
+    varying vec3 N;
+    //varying vec3 VWorld;
+    //varying vec3 flatN;
+
+    varying vec4 vColor;
+
+    void main(void) {
+        // Get the vertex position in eye coordinates
+        vec4 vertexPositionEye4 = uMVMatrixT * vec4(aVertexPosition, 1.0);
+        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+        
+        vec3 uLightPosition3 = vec3(uMVMatrixL * vec4(uLightPosition, 0.0));
+
+        //Calculate L dot N.
+        L = normalize(vertexPositionEye3 - uLightPosition3);
+        N = normalize(uNMatrix * aVertexNormal);
+        
+        //VWorld = normalize(vec3(uMVMatrix * vec4(aVertexPosition, 1.0)));
+        //flatN = vec3(uMVMatrix * vec4(N, 0.0));
+      
+        //Calculate ambTerm + difTerm + specTerm
+        vColor = aVertexColor;
+        
+        gl_Position = uPMatrix * uMVMatrixT * vec4(aVertexPosition, 1.0);
+    }
+</script>
+  
+<script id="shader-fs1" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
+    varying vec3 vertexPositionEye3;
+    varying vec3 L;
+    varying vec3 N;
+    //varying vec3 VWorld;
+    //varying vec3 flatN;
+
+    uniform vec3 uAmbientLightColor;
+    uniform vec3 uDiffuseLightColor;
+    uniform vec3 uSpecularLightColor;
+    
+    uniform mat4 rMatrix;
+
+    uniform samplerCube uCubeSampler;
+
+    const float alpha = 256.0;
+
+    void main(void) {
+        float ldotn = max(dot(L, N), 0.0);
+
+        //Calculate R dot V to the alpha.
+        vec3 R = normalize(reflect(-L, N));
+        vec3 V = normalize(vertexPositionEye3);
+        float rdotv = max(dot(R, V), 0.0);
+        float specWeight = pow(rdotv, alpha);
+
+        /*
+        vec4 vertColor = vec4((uAmbientLightColor + 
+                 uDiffuseLightColor * ldotn +
+                 uSpecularLightColor * specWeight), 1.0);
+        */
+        vec4 vertColor = vec4((uSpecularLightColor * specWeight), 1.0);
+                 
+        const float LOGB2 = 1.442695;
+        const float fogDensity = 0.08;
+        float z = gl_FragCoord.z / gl_FragCoord.w;
+        float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
+        fogFactor = clamp(fogFactor, 0.0, 1.0);
+        vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
+         
+       //gl_FragColor = mix(fogColor, vertColor, fogFactor);
+       vec3 reflection = vec3(rMatrix * vec4(reflect(V, N), 0.0));
+       //gl_FragColor = mix(vertColor, textureCube(uCubeSampler, reflection), pow(dot(reflection, -V), 3.0));
+       gl_FragColor = textureCube(uCubeSampler, reflection) + vertColor;
+       //gl_FragColor = vec4(reflection, 1.0);
+            
+            
+     }
+</script>
+  
+<script id="shader-fs2" type="x-shader/x-fragment">
+    precision mediump float;
+    varying vec4 vColor;
+    varying vec3 vertexPositionEye3;
+    varying vec3 L;
+    varying vec3 N;
+
+    uniform vec3 uAmbientLightColor;
+    uniform vec3 uDiffuseLightColor;
+    uniform vec3 uSpecularLightColor;
+
+    const float alpha = 128.0;
+
+    void main(void) {
+        float ldotn = max(dot(L, N), 0.0);
+
+        //Calculate R dot V to the alpha.
+        vec3 R = normalize(reflect(-L, N));
+        vec3 V = normalize(vertexPositionEye3);
+        float rdotv = max(dot(R, V), 0.0);
+        float specWeight = pow(rdotv, alpha);
+
+        vec4 vertColor = vec4((uAmbientLightColor + 
+                 uDiffuseLightColor * ldotn +
+                 uSpecularLightColor * specWeight), 1.0);
+
+        gl_FragColor = vertColor;
+     }
+</script>
+    
+<!--<script src="invert.js"></script>-->
+<script src="gl-matrix.js"></script> 
+<script src="webgl-utils.js"></script>
+<script src="simpleModeling.js"></script>   
+<script src="terrainModeling2.js"></script>  
+<script src="main.js"></script>  
+<script src="simulator3.js"></script>  
+<script src="typedarray.js"></script>
+<script src="simplex-noise.js"></script>
+<script src="alea.js"></script>
+<script>
+    window.addEventListener("load", function () {
+       startup(); 
+    });
+</script>
+<!--<script src="plotly-latest.min.js"></script>-->
+
+<body>
+    <h4>Brandon Dang (bcdang2) presents</h4>
+    <h1 style="display: inline-block;">Teapot World</h1>
+    <label for="showHelpCheckbox" id="showHelpLabel">Show Help </label>
+    <input type="checkbox" id="showHelpCheckbox" checked/>
+    <h3>Teapot Rendering Mode</h3>
+    <input type="radio" name="mode" id="mode-Reflective" value="reflective" checked/><label for="mode-Reflective">Reflective</label>
+    <input type="radio" name="mode" id="mode-NonReflective" value="nonreflective"/><label for="mode-NonReflective">Non-Reflective</label>
+    
+ <canvas id="myGLCanvas" width="800" height="800" style="display: block;"></canvas>
+    <subtitle style="color: white">This work produced for the UIUC course CS418 in Spring 2017.  On the off-chance you'd like to reproduce it, contact me at bcdang2@illinois.edu.</subtitle>
+    <div id="overlayDiv">
+        <div id="overlay-ControlsDiv">
+            <h2>Controls</h2>
+            <div id="cameraHUDDiv" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white;">
+                <h3>Camera</h3>
+                <h4>(<span id="cameraStats">0.0&deg;, 0.0&deg;, 0.0&deg; - default</span>)</h4>
+                <div id="cHUD-W" class="HUDKey" style="position: relative; left: 57px;">W</div>
+                <br>
+                <div id="cHUD-A" class="HUDKey">A</div>
+                <div id="cHUD-S" class="HUDKey">S</div>
+                <div id="cHUD-D" class="HUDKey">D</div>
+            </div>
+            <div id="teapotHUDDiv" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white;">
+                <h3>Teapot</h3>
+                <h4>(<span id="teapotStats">0.0&deg;, 0.0&deg;, 0.0&deg; - default</span>)</h4>
+                <div id="tHUD-UA" class="HUDKey" style="position: relative; left: 57px;">&#x25B2;</div>
+                <br/>
+                <div id="tHUD-LA" class="HUDKey" >&#x25C0;</div>
+                <div id="tHUD-DA" class="HUDKey">&#x25BC;</div>
+                <div id="tHUD-RA" class="HUDKey">&#x25B6;</div>
+            </div>
+            <p id="instructionsText" style="">Use the arrow keys to rotate the teapot, and use the WASD keys to orbit the teapot.  Press 0 to reset the teapot orientation, and o to reset the camera (world) orientation.</p>
+        </div><div id="overlay-SceneDiv" style="display: none;">
+            <h2>SCENE</h2>
+            <div id="scene-LightPosition" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                <h3>Light Position</h3>
+                <span>X</span><input type="range" id="lightXSlider" min="-1.0" max="1.0" step="0.05"/><br>
+                <span>Y</span><input type="range" id="lightYSlider" min="-1.0" max="1.0" step="0.05"/><br>
+                <span>Z</span><input type="range" id="lightZSlider" min="-1.0" max="1.0" step="0.05"/><br>
+            </div>
+            <div id="scene-LightIntensities" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                <h3>Light Intensities</h3>
+                <span>Ambient</span><input type="range" id="lightAmbSlider" min="0.0" max="1.0" step="0.05" value="0.1"/>
+                <br/>
+                <span>Diffuse</span><input type="range" id="lightDifSlider" min="0.0" max="1.0" step="0.05" value="0.8"/>
+                <br/>
+                <span>Specular</span><input type="range" id="lightSpecSlider" min="0.0" max="1.0" step="0.05" value="1.0"/>
+                <br/>
+                <span>Shininess</span><input type="range" id="lightShinSlider" min="1" max="10" step="1"/>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
