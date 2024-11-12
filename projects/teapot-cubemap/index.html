@@ -1,181 +1,194 @@
 <!DOCTYPE HTML> 
-<html lang="en"> 
-<head>
-<title>bcdang2 MP3B - Rebooted</title>
-<link rel="stylesheet" href="style.css" type="text/css" />
-<meta charset="utf-8"> 
+<head lang="en"> 
+    <title>WebGL Cubemapping — Brandon Dang</title>
+    <link rel="stylesheet" href="style.css" type="text/css">
+    <meta charset="utf-8"> 
+
+    <!-- Skybox Shaders -->
+    <script id="shaderSkybox-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat4 uNMatrix;
+        
+        varying vec3 vVertexNormal;
+        void main(void) {
+            vVertexNormal = aVertexNormal; 
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
+        }
+    </script>
+    
+    <script id="shaderSkybox-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform samplerCube uCubeSampler; 
+        varying vec3 vVertexNormal; 
+
+        void main(void) {
+            gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
+        }
+    </script>    
+
+    <!-- Teapot Shaders -->
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uMVMatrixT;
+        uniform mat4 uMVMatrixL;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+
+        uniform vec3 uLightPosition;
+
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+        //varying vec3 VWorld;
+        //varying vec3 flatN;
+
+        varying vec4 vColor;
+
+        void main(void) {
+            // Get the vertex position in eye coordinates
+            vec4 vertexPositionEye4 = uMVMatrixT * vec4(aVertexPosition, 1.0);
+            vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+            
+            vec3 uLightPosition3 = vec3(uMVMatrixL * vec4(uLightPosition, 0.0));
+
+            //Calculate L dot N.
+            L = normalize(vertexPositionEye3 - uLightPosition3);
+            N = normalize(uNMatrix * aVertexNormal);
+            
+            //VWorld = normalize(vec3(uMVMatrix * vec4(aVertexPosition, 1.0)));
+            //flatN = vec3(uMVMatrix * vec4(N, 0.0));
+        
+            //Calculate ambTerm + difTerm + specTerm
+            vColor = aVertexColor;
+            
+            gl_Position = uPMatrix * uMVMatrixT * vec4(aVertexPosition, 1.0);
+        }
+    </script>
+    
+    <script id="shader-fs1" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+        //varying vec3 VWorld;
+        //varying vec3 flatN;
+
+        uniform vec3 uAmbientLightColor;
+        uniform vec3 uDiffuseLightColor;
+        uniform vec3 uSpecularLightColor;
+        
+        uniform mat4 rMatrix;
+
+        uniform samplerCube uCubeSampler;
+
+        const float alpha = 256.0;
+
+        void main(void) {
+            float ldotn = max(dot(L, N), 0.0);
+
+            //Calculate R dot V to the alpha.
+            vec3 R = normalize(reflect(-L, N));
+            vec3 V = normalize(vertexPositionEye3);
+            float rdotv = max(dot(R, V), 0.0);
+            float specWeight = pow(rdotv, alpha);
+
+            /*
+            vec4 vertColor = vec4((uAmbientLightColor + 
+                    uDiffuseLightColor * ldotn +
+                    uSpecularLightColor * specWeight), 1.0);
+            */
+            vec4 vertColor = vec4((uSpecularLightColor * specWeight), 1.0);
+                    
+            const float LOGB2 = 1.442695;
+            const float fogDensity = 0.08;
+            float z = gl_FragCoord.z / gl_FragCoord.w;
+            float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
+            fogFactor = clamp(fogFactor, 0.0, 1.0);
+            vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
+            
+        //gl_FragColor = mix(fogColor, vertColor, fogFactor);
+        vec3 reflection = vec3(rMatrix * vec4(reflect(V, N), 0.0));
+        //gl_FragColor = mix(vertColor, textureCube(uCubeSampler, reflection), pow(dot(reflection, -V), 3.0));
+        gl_FragColor = textureCube(uCubeSampler, reflection) + vertColor;
+        //gl_FragColor = vec4(reflection, 1.0);
+                
+                
+        }
+    </script>
+    
+    <script id="shader-fs2" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        uniform vec3 uAmbientLightColor;
+        uniform vec3 uDiffuseLightColor;
+        uniform vec3 uSpecularLightColor;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            float ldotn = max(dot(L, N), 0.0);
+
+            //Calculate R dot V to the alpha.
+            vec3 R = normalize(reflect(-L, N));
+            vec3 V = normalize(vertexPositionEye3);
+            float rdotv = max(dot(R, V), 0.0);
+            float specWeight = pow(rdotv, alpha);
+
+            vec4 vertColor = vec4((uAmbientLightColor + 
+                    uDiffuseLightColor * ldotn +
+                    uSpecularLightColor * specWeight), 1.0);
+
+            gl_FragColor = vertColor;
+        }
+    </script>
+        
+    <!--<script src="invert.js"></script>-->
+    <link rel="stylesheet" href="../../css/styles.css" type="text/css">
+    <script src="gl-matrix.js"></script> 
+    <script src="webgl-utils.js"></script>
+    <script src="simpleModeling.js"></script>   
+    <script src="terrainModeling2.js"></script>  
+    <script src="main.js"></script>  
+    <script src="simulator3.js"></script>  
+    <script src="typedarray.js"></script>
+    <script src="simplex-noise.js"></script>
+    <script src="alea.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+        startup(); 
+        });
+    </script>
+<!--<script src="plotly-latest.min.js"></script>-->
 </head>
 
-<!-- Skybox Shaders -->
-<script id="shaderSkybox-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat4 uNMatrix;
-    
-    varying vec3 vVertexNormal;
-    void main(void) {
-        vVertexNormal = aVertexNormal; 
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
-    }
-</script>
-  
-<script id="shaderSkybox-fs" type="x-shader/x-fragment">
-    precision mediump float;
-    uniform samplerCube uCubeSampler; 
-    varying vec3 vVertexNormal; 
-
-    void main(void) {
-        gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
-    }
-</script>    
-
-<!-- Teapot Shaders -->
-<script id="shader-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uMVMatrixT;
-    uniform mat4 uMVMatrixL;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-
-    uniform vec3 uLightPosition;
-
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
-    //varying vec3 VWorld;
-    //varying vec3 flatN;
-
-    varying vec4 vColor;
-
-    void main(void) {
-        // Get the vertex position in eye coordinates
-        vec4 vertexPositionEye4 = uMVMatrixT * vec4(aVertexPosition, 1.0);
-        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
-        
-        vec3 uLightPosition3 = vec3(uMVMatrixL * vec4(uLightPosition, 0.0));
-
-        //Calculate L dot N.
-        L = normalize(vertexPositionEye3 - uLightPosition3);
-        N = normalize(uNMatrix * aVertexNormal);
-        
-        //VWorld = normalize(vec3(uMVMatrix * vec4(aVertexPosition, 1.0)));
-        //flatN = vec3(uMVMatrix * vec4(N, 0.0));
-      
-        //Calculate ambTerm + difTerm + specTerm
-        vColor = aVertexColor;
-        
-        gl_Position = uPMatrix * uMVMatrixT * vec4(aVertexPosition, 1.0);
-    }
-</script>
-  
-<script id="shader-fs1" type="x-shader/x-fragment">
-    precision mediump float;
-    varying vec4 vColor;
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
-    //varying vec3 VWorld;
-    //varying vec3 flatN;
-
-    uniform vec3 uAmbientLightColor;
-    uniform vec3 uDiffuseLightColor;
-    uniform vec3 uSpecularLightColor;
-    
-    uniform mat4 rMatrix;
-
-    uniform samplerCube uCubeSampler;
-
-    const float alpha = 256.0;
-
-    void main(void) {
-        float ldotn = max(dot(L, N), 0.0);
-
-        //Calculate R dot V to the alpha.
-        vec3 R = normalize(reflect(-L, N));
-        vec3 V = normalize(vertexPositionEye3);
-        float rdotv = max(dot(R, V), 0.0);
-        float specWeight = pow(rdotv, alpha);
-
-        /*
-        vec4 vertColor = vec4((uAmbientLightColor + 
-                 uDiffuseLightColor * ldotn +
-                 uSpecularLightColor * specWeight), 1.0);
-        */
-        vec4 vertColor = vec4((uSpecularLightColor * specWeight), 1.0);
-                 
-        const float LOGB2 = 1.442695;
-        const float fogDensity = 0.08;
-        float z = gl_FragCoord.z / gl_FragCoord.w;
-        float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
-        fogFactor = clamp(fogFactor, 0.0, 1.0);
-        vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
-         
-       //gl_FragColor = mix(fogColor, vertColor, fogFactor);
-       vec3 reflection = vec3(rMatrix * vec4(reflect(V, N), 0.0));
-       //gl_FragColor = mix(vertColor, textureCube(uCubeSampler, reflection), pow(dot(reflection, -V), 3.0));
-       gl_FragColor = textureCube(uCubeSampler, reflection) + vertColor;
-       //gl_FragColor = vec4(reflection, 1.0);
-            
-            
-     }
-</script>
-  
-<script id="shader-fs2" type="x-shader/x-fragment">
-    precision mediump float;
-    varying vec4 vColor;
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
-
-    uniform vec3 uAmbientLightColor;
-    uniform vec3 uDiffuseLightColor;
-    uniform vec3 uSpecularLightColor;
-
-    const float alpha = 128.0;
-
-    void main(void) {
-        float ldotn = max(dot(L, N), 0.0);
-
-        //Calculate R dot V to the alpha.
-        vec3 R = normalize(reflect(-L, N));
-        vec3 V = normalize(vertexPositionEye3);
-        float rdotv = max(dot(R, V), 0.0);
-        float specWeight = pow(rdotv, alpha);
-
-        vec4 vertColor = vec4((uAmbientLightColor + 
-                 uDiffuseLightColor * ldotn +
-                 uSpecularLightColor * specWeight), 1.0);
-
-        gl_FragColor = vertColor;
-     }
-</script>
-    
-<!--<script src="invert.js"></script>-->
-<script src="gl-matrix.js"></script> 
-<script src="webgl-utils.js"></script>
-<script src="simpleModeling.js"></script>   
-<script src="terrainModeling2.js"></script>  
-<script src="main.js"></script>  
-<script src="simulator3.js"></script>  
-<script src="typedarray.js"></script>
-<script src="simplex-noise.js"></script>
-<script src="alea.js"></script>
-<script>
-    window.addEventListener("load", function () {
-       startup(); 
-    });
-</script>
-<!--<script src="plotly-latest.min.js"></script>-->
-
 <body>
-    <h4>Brandon Dang (bcdang2) presents</h4>
+    <div id="main-header" class="collapsed">
+        <a id="header-back-button" href="../..">← Home
+            <div id="header-logo">
+            <img id="logo-img" class="logo-img" 
+                    src="../../media/logo/header-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-hoverImg" class="logo-img" 
+                    src="../../media/logo/header-gradient.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-activeImg" class="logo-img" 
+                    src="../../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+        </div><h1>Brandon Dang</h1></a>
+    </div>
+    <article>
+        <h2>Teapot: WebGL Cube Mapped Reflections</h2>
+        <h3 class="tag blueBG whiteText">Shader Programming</h3>
     <h1 style="display: inline-block;">Teapot World</h1>
     <label for="showHelpCheckbox" id="showHelpLabel">Show Help </label>
     <input type="checkbox" id="showHelpCheckbox" checked/>
@@ -227,6 +240,7 @@
             </div>
         </div>
     </div>
+    </article>
 </body>
 
 </html>
