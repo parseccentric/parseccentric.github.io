@@ -10,374 +10,375 @@
  */-->
 <head>
     <title>bcdang2 MP4</title>
-    <link rel="stylesheet" href="style.css" type="text/css" />
+    <link rel="stylesheet" href="style.css" type="text/css">
     <meta charset="utf-8"> 
-</head>
 
-<!-- Ball Shaders /***
- *    ████████╗███████╗██╗  ██╗████████╗██╗   ██╗██████╗ ███████╗
- *    ╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝██║   ██║██╔══██╗██╔════╝
- *       ██║   █████╗   ╚███╔╝    ██║   ██║   ██║██████╔╝█████╗  
- *       ██║   ██╔══╝   ██╔██╗    ██║   ██║   ██║██╔══██╗██╔══╝  
- *       ██║   ███████╗██╔╝ ██╗   ██║   ╚██████╔╝██║  ██║███████╗
- *       ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
- *                                                               
- *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗   
- *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝   
- *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗   
- *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║   
- *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║   
- *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝   
- *                                                               
- */-->
-<script id="texturedBall-vs" type="x-shader/x-vertex">
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat4 uNMatrix;
-    
-    varying vec3 vVertexNormal;
-    void main(void) {
-        vVertexNormal = aVertexNormal; 
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
-    }
-</script>
-  
-<script id="texturedBall-fs" type="x-shader/x-fragment">
-    precision mediump float;
-    uniform samplerCube uCubeSampler; 
-    varying vec3 vVertexNormal; 
-
-    void main(void) {
-        gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
-    }
-</script>    
-<!-- Phong Shaders /***
- *    ██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗ ██████╗             
- *    ██╔══██╗██║  ██║██╔═══██╗████╗  ██║██╔════╝             
- *    ██████╔╝███████║██║   ██║██╔██╗ ██║██║  ███╗            
- *    ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║██║   ██║            
- *    ██║     ██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝            
- *    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝             
- *                                                            
- *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗
- *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝
- *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗
- *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║
- *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║
- *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝
- *                                                            
- */-->
-<script id="phongBall-vs" type="x-shader/x-vertex">
-    precision mediump float;
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-
-    uniform vec3 uLightPosition;
-
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
-
-    varying vec4 vColor;
-
-    void main(void) {
-        //get the vertex position in eye coordinates
-        vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
-        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+    <!-- Ball Shaders /***
+    *    ████████╗███████╗██╗  ██╗████████╗██╗   ██╗██████╗ ███████╗
+    *    ╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝██║   ██║██╔══██╗██╔════╝
+    *       ██║   █████╗   ╚███╔╝    ██║   ██║   ██║██████╔╝█████╗  
+    *       ██║   ██╔══╝   ██╔██╗    ██║   ██║   ██║██╔══██╗██╔══╝  
+    *       ██║   ███████╗██╔╝ ██╗   ██║   ╚██████╔╝██║  ██║███████╗
+    *       ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
+    *                                                               
+    *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗   
+    *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝   
+    *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗   
+    *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║   
+    *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║   
+    *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝   
+    *                                                               
+    */-->
+    <script id="texturedBall-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat4 uNMatrix;
         
-        vec3 uLightPosition3 = vec3(uMVMatrix * vec4(uLightPosition, 0.0));
-
-        //calculate L dot N.
-        L = normalize(vertexPositionEye3 - uLightPosition3);
-        N = -normalize(uNMatrix * aVertexNormal);
-      
-        //send to fragment shader.
-        vColor = aVertexColor;
-        
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-    }
-</script>
+        varying vec3 vVertexNormal;
+        void main(void) {
+            vVertexNormal = aVertexNormal; 
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
+        }
+    </script>
     
-<script id="phongBall-fs" type="x-shader/x-fragment">
-    precision mediump float;
-    varying vec4 vColor;
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
+    <script id="texturedBall-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform samplerCube uCubeSampler; 
+        varying vec3 vVertexNormal; 
 
-    uniform vec3 uAmbientColor;
-    uniform vec3 uDiffuseColor;
-    uniform vec3 uSpecularColor;
+        void main(void) {
+            gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
+        }
+    </script>    
+    <!-- Phong Shaders /***
+    *    ██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗ ██████╗             
+    *    ██╔══██╗██║  ██║██╔═══██╗████╗  ██║██╔════╝             
+    *    ██████╔╝███████║██║   ██║██╔██╗ ██║██║  ███╗            
+    *    ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║██║   ██║            
+    *    ██║     ██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝            
+    *    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝             
+    *                                                            
+    *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗
+    *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝
+    *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗
+    *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║
+    *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║
+    *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝
+    *                                                            
+    */-->
+    <script id="phongBall-vs" type="x-shader/x-vertex">
+        precision mediump float;
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
 
-    const float alpha = 128.0;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
 
-    void main(void) {
-        float ldotn = dot(L, N);//max(dot(L, N), 0.0);
+        uniform vec3 uLightPosition;
 
-        //calculate R dot V to the alpha.
-        vec3 R = normalize(reflect(-L, N));
-        vec3 V = normalize(vertexPositionEye3);
-        float rdotv = max(dot(R, V), 0.0);
-        float specWeight = pow(rdotv, alpha);
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
 
-        vec4 vertColor = vec4((uAmbientColor + 
-                 uDiffuseColor * ldotn +
-                 uSpecularColor * specWeight), 1.0);
-        /* vec4 vertColor = vec4(1.0, 1.0, 1.0, 1.0); */
+        varying vec4 vColor;
 
-        gl_FragColor = vertColor;
-     }
-</script>
-    
-<!--/***
- *    ██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗ ██████╗     ██╗    ██╗    ██╗
- *    ██╔══██╗██║  ██║██╔═══██╗████╗  ██║██╔════╝     ██║    ██║   ██╔╝
- *    ██████╔╝███████║██║   ██║██╔██╗ ██║██║  ███╗    ██║ █╗ ██║  ██╔╝ 
- *    ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║██║   ██║    ██║███╗██║ ██╔╝  
- *    ██║     ██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝    ╚███╔███╔╝██╔╝   
- *    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝      ╚══╝╚══╝ ╚═╝    
- *                                                                     
- *    ██╗     ██╗ ██████╗ ██╗  ██╗████████╗███████╗    ██╗       ██╗   
- *    ██║     ██║██╔════╝ ██║  ██║╚══██╔══╝██╔════╝    ╚██╗     ███║   
- *    ██║     ██║██║  ███╗███████║   ██║   ███████╗     ╚██╗    ╚██║   
- *    ██║     ██║██║   ██║██╔══██║   ██║   ╚════██║     ██╔╝     ██║   
- *    ███████╗██║╚██████╔╝██║  ██║   ██║   ███████║    ██╔╝      ██║   
- *    ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝       ╚═╝   
- *                                                                     
- */
--->
-    
-<script id="phongMultiLight-vs" type="x-shader/x-vertex">
-    precision mediump float;
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-
-    varying vec3 vertexPositionEye3;
-    varying vec3 vNormal;
-    varying vec4 vColor;
-
-    void main(void) {
-        //get the vertex position in eye coordinates
-        vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
-        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
-      
-        //send to fragment shader.
-        vColor = aVertexColor;
-        vNormal = aVertexNormal;
-        
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-    }
-</script>
-    
-<script id="phongMultiLight-fs" type="x-shader/x-fragment">
-    precision mediump float;
-    varying vec4 vColor;
-    varying vec3 vNormal;
-    varying vec3 vertexPositionEye3;
-
-    const int numLights = 3;
-    uniform vec3 uLightPositions[numLights];
-    uniform vec3 uAmbientColor;
-    uniform vec3 uDiffuseColors[numLights];
-    uniform vec3 uSpecularColors[numLights];
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-
-    const float alpha = 128.0;
-
-    void main(void) {
-        vec4 vertColor = vec4(0.0, 0.0, 0.0, 1.0);
-    
-        for (int i = 0; i < numLights; i++) {
-            vec3 uLightPosition3 = vec3(uMVMatrix * vec4(uLightPositions[i], 0.0));
+        void main(void) {
+            //get the vertex position in eye coordinates
+            vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+            vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+            
+            vec3 uLightPosition3 = vec3(uMVMatrix * vec4(uLightPosition, 0.0));
 
             //calculate L dot N.
-            vec3 L = normalize(vertexPositionEye3 - uLightPosition3);
-            vec3 N = -normalize(uNMatrix * vNormal);
-            float ldotn = dot(L, N); //max(dot(L, N), 0.0);
+            L = normalize(vertexPositionEye3 - uLightPosition3);
+            N = -normalize(uNMatrix * aVertexNormal);
+        
+            //send to fragment shader.
+            vColor = aVertexColor;
+            
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        }
+    </script>
+        
+    <script id="phongBall-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        uniform vec3 uAmbientColor;
+        uniform vec3 uDiffuseColor;
+        uniform vec3 uSpecularColor;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            float ldotn = dot(L, N);//max(dot(L, N), 0.0);
 
             //calculate R dot V to the alpha.
             vec3 R = normalize(reflect(-L, N));
             vec3 V = normalize(vertexPositionEye3);
             float rdotv = max(dot(R, V), 0.0);
             float specWeight = pow(rdotv, alpha);
-            
-            vertColor += vec4((uAmbientColor / 3.0 + 
-                 uDiffuseColors[i] * ldotn / 3.0 +
-                 uSpecularColors[i] * specWeight / 3.0), 0.0);
+
+            vec4 vertColor = vec4((uAmbientColor + 
+                    uDiffuseColor * ldotn +
+                    uSpecularColor * specWeight), 1.0);
+            /* vec4 vertColor = vec4(1.0, 1.0, 1.0, 1.0); */
+
+            gl_FragColor = vertColor;
         }
-
-        gl_FragColor = vertColor;
-     }
-</script>
-    
-<!--/***
- *    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗                     
- *    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝                     
- *    ██║  ██║█████╗  ██████╔╝██║   ██║██║  ███╗                    
- *    ██║  ██║██╔══╝  ██╔══██╗██║   ██║██║   ██║                    
- *    ██████╔╝███████╗██████╔╝╚██████╔╝╚██████╔╝                    
- *    ╚═════╝ ╚══════╝╚═════╝  ╚═════╝  ╚═════╝                     
- *                                                                  
- *    ███╗   ██╗ ██████╗ ██████╗ ███╗   ███╗ █████╗ ██╗     ███████╗
- *    ████╗  ██║██╔═══██╗██╔══██╗████╗ ████║██╔══██╗██║     ██╔════╝
- *    ██╔██╗ ██║██║   ██║██████╔╝██╔████╔██║███████║██║     ███████╗
- *    ██║╚██╗██║██║   ██║██╔══██╗██║╚██╔╝██║██╔══██║██║     ╚════██║
- *    ██║ ╚████║╚██████╔╝██║  ██║██║ ╚═╝ ██║██║  ██║███████╗███████║
- *    ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝
- *                                                                  
- */-->
-    
-<script id="phongDebugNormals-vs" type="x-shader/x-vertex">
-    precision mediump float;
-    attribute vec3 aVertexTangent;
-    attribute vec3 aVertexBitangent;
-    attribute vec3 aVertexNormal;
-    attribute vec3 aVertexPosition;
-    attribute vec4 aVertexColor;
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-
-    varying vec3 vertexPositionEye3;
-    varying vec3 vTangent;
-    varying vec3 vBitangent;
-    varying vec3 vNormal;
-    varying vec4 vColor;
-
-    void main(void) {
-        //get the vertex position in eye coordinates
-        vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
-        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
-      
-        //send to fragment shader.
-        vColor = aVertexColor;
-        vTangent = aVertexTangent;
-        vBitangent = aVertexBitangent;
-        vNormal = aVertexNormal;
+    </script>
         
-        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
-    }
-</script>
-    
-<script id="phongDebugNormals-fs" type="x-shader/x-fragment">
-    precision mediump float;
-    
-    const float PI = 3.141592653589793238462643383;
-    
-    varying vec4 vColor;
-    varying vec3 vTangent;
-    varying vec3 vBitangent;
-    varying vec3 vNormal;
-    varying vec3 vertexPositionEye3;
-
-    const int numLights = 3;
-    uniform vec3 uLightPositions[numLights];
-    uniform vec3 uAmbientColor;
-    uniform vec3 uDiffuseColors[numLights];
-    uniform vec3 uSpecularColors[numLights];
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-    
-    uniform sampler2D uTextureSampler;
-    uniform sampler2D uNormalSampler;
-
-    const float alpha = 128.0;
-
-    void main(void) {
-        float u = asin(vNormal.x) / PI / 2.0 + 0.5;
-        float v = asin(vNormal.y) / PI / 2.0 + 0.5;
-        vec4 vertColor = vec4(uAmbientColor, 1.0);
+    <!--/***
+    *    ██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗ ██████╗     ██╗    ██╗    ██╗
+    *    ██╔══██╗██║  ██║██╔═══██╗████╗  ██║██╔════╝     ██║    ██║   ██╔╝
+    *    ██████╔╝███████║██║   ██║██╔██╗ ██║██║  ███╗    ██║ █╗ ██║  ██╔╝ 
+    *    ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║██║   ██║    ██║███╗██║ ██╔╝  
+    *    ██║     ██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝    ╚███╔███╔╝██╔╝   
+    *    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝      ╚══╝╚══╝ ╚═╝    
+    *                                                                     
+    *    ██╗     ██╗ ██████╗ ██╗  ██╗████████╗███████╗    ██╗       ██╗   
+    *    ██║     ██║██╔════╝ ██║  ██║╚══██╔══╝██╔════╝    ╚██╗     ███║   
+    *    ██║     ██║██║  ███╗███████║   ██║   ███████╗     ╚██╗    ╚██║   
+    *    ██║     ██║██║   ██║██╔══██║   ██║   ╚════██║     ██╔╝     ██║   
+    *    ███████╗██║╚██████╔╝██║  ██║   ██║   ███████║    ██╔╝      ██║   
+    *    ╚══════╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   ╚══════╝    ╚═╝       ╚═╝   
+    *                                                                     
+    */
+    -->
         
-        mat3 invertedTBN = mat3(vTangent.x, vBitangent.x, vNormal.x,
-                                vTangent.y, vBitangent.y, vNormal.y,
-                                vTangent.z, vBitangent.z, vNormal.z);
-                                
-                                
-        invertedTBN = mat3(vTangent.x, vTangent.y, vTangent.z,
-                                vBitangent.x, vBitangent.y, vBitangent.z,
-                                vNormal.x, vNormal.y, vNormal.z);
-                                
-    
-        for (int i = 0; i < numLights; i++) {
-            vec3 uLightPosition3 = vec3(vec4(uLightPositions[i], 0.0));
+    <script id="phongMultiLight-vs" type="x-shader/x-vertex">
+        precision mediump float;
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
 
-            //calculate L dot N, in the tangent space.
-            vec3 L = invertedTBN * normalize(vertexPositionEye3 - uLightPosition3);
-            vec3 N = (texture2D(uTextureSampler, vec2(u, v)).xyz * 2.0 - 0.5);
-            float ldotn = dot(L, N); //max(dot(L, N), 0.0);
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
 
-            //calculate R dot V to the alpha (this will conseq'ly be in the tan space).
-            vec3 R = normalize(reflect(-L, N));
-            vec3 V = invertedTBN * normalize(vertexPositionEye3);
-            float rdotv = max(dot(R, V), 0.0);
-            float specWeight = pow(rdotv, alpha);
+        varying vec3 vertexPositionEye3;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+
+        void main(void) {
+            //get the vertex position in eye coordinates
+            vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+            vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+        
+            //send to fragment shader.
+            vColor = aVertexColor;
+            vNormal = aVertexNormal;
             
-            
-            vertColor += vec4((uDiffuseColors[i] * ldotn +
-                               uSpecularColors[i] * specWeight), 1.0);
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         }
+    </script>
+        
+    <script id="phongMultiLight-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vNormal;
+        varying vec3 vertexPositionEye3;
 
-        vertColor = mix(texture2D(uTextureSampler, vec2(u, v)), normalize(vertColor), 1.0);
+        const int numLights = 3;
+        uniform vec3 uLightPositions[numLights];
+        uniform vec3 uAmbientColor;
+        uniform vec3 uDiffuseColors[numLights];
+        uniform vec3 uSpecularColors[numLights];
 
-        gl_FragColor = vertColor;//texture2D(uNormalSampler, vec2(u, v));
-     }
-</script>
-    
-<!--/***
- *    ██████╗ ██╗   ██╗███╗   ███╗██████╗                
- *    ██╔══██╗██║   ██║████╗ ████║██╔══██╗               
- *    ██████╔╝██║   ██║██╔████╔██║██████╔╝█████╗         
- *    ██╔══██╗██║   ██║██║╚██╔╝██║██╔═══╝ ╚════╝         
- *    ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║                    
- *    ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝                    
- *                                                       
- *    ███╗   ███╗ █████╗ ██████╗ ██████╗ ███████╗██████╗ 
- *    ████╗ ████║██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
- *    ██╔████╔██║███████║██████╔╝██████╔╝█████╗  ██║  ██║
- *    ██║╚██╔╝██║██╔══██║██╔═══╝ ██╔═══╝ ██╔══╝  ██║  ██║
- *    ██║ ╚═╝ ██║██║  ██║██║     ██║     ███████╗██████╔╝
- *    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚═════╝ 
- *                                                       
- */-->
-    
-    
-<!-- Scripts /***
- *
- *    ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗███████╗
- *    ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝██╔════╝
- *    ███████╗██║     ██████╔╝██║██████╔╝   ██║   ███████╗
- *    ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   ╚════██║
- *    ███████║╚██████╗██║  ██║██║██║        ██║   ███████║
- *    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝
- */-->
-<script src="debug.js"></script>  
-<script src="gl-matrix.js"></script> 
-<script src="gl-webgl-utils.js"></script>
-<script src="helper-typedarray.js"></script>
-<script src="modeling-sphere.js"></script>    
-<script src="main.js"></script>  
-<script src="main-input.js"></script>   
-<script src="modeling-simplex-noise.js"></script>
-<script src="modeling-alea.js"></script>
-<script> window.addEventListener("load", startup); </script>
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            vec4 vertColor = vec4(0.0, 0.0, 0.0, 1.0);
+        
+            for (int i = 0; i < numLights; i++) {
+                vec3 uLightPosition3 = vec3(uMVMatrix * vec4(uLightPositions[i], 0.0));
+
+                //calculate L dot N.
+                vec3 L = normalize(vertexPositionEye3 - uLightPosition3);
+                vec3 N = -normalize(uNMatrix * vNormal);
+                float ldotn = dot(L, N); //max(dot(L, N), 0.0);
+
+                //calculate R dot V to the alpha.
+                vec3 R = normalize(reflect(-L, N));
+                vec3 V = normalize(vertexPositionEye3);
+                float rdotv = max(dot(R, V), 0.0);
+                float specWeight = pow(rdotv, alpha);
+                
+                vertColor += vec4((uAmbientColor / 3.0 + 
+                    uDiffuseColors[i] * ldotn / 3.0 +
+                    uSpecularColors[i] * specWeight / 3.0), 0.0);
+            }
+
+            gl_FragColor = vertColor;
+        }
+    </script>
+        
+    <!--/***
+    *    ██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗                     
+    *    ██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝                     
+    *    ██║  ██║█████╗  ██████╔╝██║   ██║██║  ███╗                    
+    *    ██║  ██║██╔══╝  ██╔══██╗██║   ██║██║   ██║                    
+    *    ██████╔╝███████╗██████╔╝╚██████╔╝╚██████╔╝                    
+    *    ╚═════╝ ╚══════╝╚═════╝  ╚═════╝  ╚═════╝                     
+    *                                                                  
+    *    ███╗   ██╗ ██████╗ ██████╗ ███╗   ███╗ █████╗ ██╗     ███████╗
+    *    ████╗  ██║██╔═══██╗██╔══██╗████╗ ████║██╔══██╗██║     ██╔════╝
+    *    ██╔██╗ ██║██║   ██║██████╔╝██╔████╔██║███████║██║     ███████╗
+    *    ██║╚██╗██║██║   ██║██╔══██╗██║╚██╔╝██║██╔══██║██║     ╚════██║
+    *    ██║ ╚████║╚██████╔╝██║  ██║██║ ╚═╝ ██║██║  ██║███████╗███████║
+    *    ╚═╝  ╚═══╝ ╚═════╝ ╚═╝  ╚═╝╚═╝     ╚═╝╚═╝  ╚═╝╚══════╝╚══════╝
+    *                                                                  
+    */-->
+        
+    <script id="phongDebugNormals-vs" type="x-shader/x-vertex">
+        precision mediump float;
+        attribute vec3 aVertexTangent;
+        attribute vec3 aVertexBitangent;
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+
+        varying vec3 vertexPositionEye3;
+        varying vec3 vTangent;
+        varying vec3 vBitangent;
+        varying vec3 vNormal;
+        varying vec4 vColor;
+
+        void main(void) {
+            //get the vertex position in eye coordinates
+            vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+            vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+        
+            //send to fragment shader.
+            vColor = aVertexColor;
+            vTangent = aVertexTangent;
+            vBitangent = aVertexBitangent;
+            vNormal = aVertexNormal;
+            
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        }
+    </script>
+        
+    <script id="phongDebugNormals-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        
+        const float PI = 3.141592653589793238462643383;
+        
+        varying vec4 vColor;
+        varying vec3 vTangent;
+        varying vec3 vBitangent;
+        varying vec3 vNormal;
+        varying vec3 vertexPositionEye3;
+
+        const int numLights = 3;
+        uniform vec3 uLightPositions[numLights];
+        uniform vec3 uAmbientColor;
+        uniform vec3 uDiffuseColors[numLights];
+        uniform vec3 uSpecularColors[numLights];
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+        
+        uniform sampler2D uTextureSampler;
+        uniform sampler2D uNormalSampler;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            float u = asin(vNormal.x) / PI / 2.0 + 0.5;
+            float v = asin(vNormal.y) / PI / 2.0 + 0.5;
+            vec4 vertColor = vec4(uAmbientColor, 1.0);
+            
+            mat3 invertedTBN = mat3(vTangent.x, vBitangent.x, vNormal.x,
+                                    vTangent.y, vBitangent.y, vNormal.y,
+                                    vTangent.z, vBitangent.z, vNormal.z);
+                                    
+                                    
+            invertedTBN = mat3(vTangent.x, vTangent.y, vTangent.z,
+                                    vBitangent.x, vBitangent.y, vBitangent.z,
+                                    vNormal.x, vNormal.y, vNormal.z);
+                                    
+        
+            for (int i = 0; i < numLights; i++) {
+                vec3 uLightPosition3 = vec3(vec4(uLightPositions[i], 0.0));
+
+                //calculate L dot N, in the tangent space.
+                vec3 L = invertedTBN * normalize(vertexPositionEye3 - uLightPosition3);
+                vec3 N = (texture2D(uTextureSampler, vec2(u, v)).xyz * 2.0 - 0.5);
+                float ldotn = dot(L, N); //max(dot(L, N), 0.0);
+
+                //calculate R dot V to the alpha (this will conseq'ly be in the tan space).
+                vec3 R = normalize(reflect(-L, N));
+                vec3 V = invertedTBN * normalize(vertexPositionEye3);
+                float rdotv = max(dot(R, V), 0.0);
+                float specWeight = pow(rdotv, alpha);
+                
+                
+                vertColor += vec4((uDiffuseColors[i] * ldotn +
+                                uSpecularColors[i] * specWeight), 1.0);
+            }
+
+            vertColor = mix(texture2D(uTextureSampler, vec2(u, v)), normalize(vertColor), 1.0);
+
+            gl_FragColor = vertColor;//texture2D(uNormalSampler, vec2(u, v));
+        }
+    </script>
+        
+    <!--/***
+    *    ██████╗ ██╗   ██╗███╗   ███╗██████╗                
+    *    ██╔══██╗██║   ██║████╗ ████║██╔══██╗               
+    *    ██████╔╝██║   ██║██╔████╔██║██████╔╝█████╗         
+    *    ██╔══██╗██║   ██║██║╚██╔╝██║██╔═══╝ ╚════╝         
+    *    ██████╔╝╚██████╔╝██║ ╚═╝ ██║██║                    
+    *    ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝                    
+    *                                                       
+    *    ███╗   ███╗ █████╗ ██████╗ ██████╗ ███████╗██████╗ 
+    *    ████╗ ████║██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔══██╗
+    *    ██╔████╔██║███████║██████╔╝██████╔╝█████╗  ██║  ██║
+    *    ██║╚██╔╝██║██╔══██║██╔═══╝ ██╔═══╝ ██╔══╝  ██║  ██║
+    *    ██║ ╚═╝ ██║██║  ██║██║     ██║     ███████╗██████╔╝
+    *    ╚═╝     ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝     ╚══════╝╚═════╝ 
+    *                                                       
+    */-->
+        
+        
+    <!-- Scripts /***
+    *
+    *    ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗███████╗
+    *    ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝██╔════╝
+    *    ███████╗██║     ██████╔╝██║██████╔╝   ██║   ███████╗
+    *    ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   ╚════██║
+    *    ███████║╚██████╗██║  ██║██║██║        ██║   ███████║
+    *    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝
+    */-->
+    <link rel="stylesheet" href="../../css/styles.css">
+    <script src="debug.js"></script>  
+    <script src="gl-matrix.js"></script> 
+    <script src="gl-webgl-utils.js"></script>
+    <script src="helper-typedarray.js"></script>
+    <script src="modeling-sphere.js"></script>    
+    <script src="main.js"></script>  
+    <script src="main-input.js"></script>   
+    <script src="modeling-simplex-noise.js"></script>
+    <script src="modeling-alea.js"></script>
+    <script> window.addEventListener("load", startup); </script>
+</head>
 
 <!-- Document /***
  *
@@ -389,13 +390,27 @@
  *    ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝ 
  */ -->
 <body>
-    <h4>Brandon Dang (bcdang2) presents</h4>
-    <h1 style="display: block;">Bump-Mapping Boogaloo</h1>
+    <div id="main-header" class="collapsed">
+        <a id="header-back-button" href="../..">← Home
+            <div id="header-logo">
+            <img id="logo-img" class="logo-img" 
+                    src="../../media/logo/header-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-hoverImg" class="logo-img" 
+                    src="../../media/logo/header-gradient.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-activeImg" class="logo-img" 
+                    src="../../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+        </div><h1>Brandon Dang</h1></a>
+    </div>
+    <article>
+        <h2>Bump-Mapping Boogaloo</h2>
+        <h3 class="tag blueBG whiteText">Shader Programming</h3>
+        <img class="gallery-wide" src="bump-map.png" alt="In a plain, dark environment is a sphere with a rough texture, lit from a single point light.">
+        <p>This was made in fulfillment of Interactive Computer Graphics at the University of Illinois.</p>
 		<input type="checkbox" id="changeTexturesCheckbox" checked>
 		<label for="changeTexturesCheckbox">
             Change Textures Every 60 Frames
         </label>
-			
+
 		<input type="checkbox" id="autoRotateCheckbox" checked>
 		<label for="autoRotateCheckbox">
             Auto-Rotate Scene
@@ -405,41 +420,42 @@
     <input type="checkbox" id="showHelpCheckbox" checked/>
 -->
     
- <canvas id="myGLCanvas" width="800" height="800" style="display: block;"></canvas>
-    <subtitle style="color: white">This work produced for the UIUC course CS418 in Spring 2017.  On the off-chance you'd like to reproduce it, contact me at bcdang2@illinois.edu.</subtitle>
-    
-    <div id="controls">
-	</div>
-    
-    <div id="overlayDiv">
-        <div id="overlay-ControlsDiv">
-        </div><div id="overlay-SceneDiv" style="">
-            <h2>SCENE</h2>
-            <div id="scene-LightPosition" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
-                <h3>Light Position</h3>
-                <span>X</span><input type="range" id="lightXSlider" 
-                                     value="0.0" min="-15.0" max="15.0" step="0.05"/><br>
-                <span>Y</span><input type="range" id="lightYSlider" 
-                                     value="15.0" min="-15.0" max="15.0" step="0.05"/><br>
-                <span>Z</span><input type="range" id="lightZSlider" 
-                                     value="-15.0" min="-15.0" max="15.0" step="0.05"/><br>
-            </div>
-            <div id="scene-LightIntensities" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
-                <h3>Light Intensities</h3>
-                <span>Ambient</span><input type="range" id="lightAmbSlider" 
-                                           min="0.0" max="1.0" step="0.05" value="0.4"/>
-                <br/>
-                <span>Diffuse</span><input type="range" id="lightDifSlider" 
-                                           min="0.0" max="1.0" step="0.05" value="0.6"/>
-                <br/>
-                <span>Specular</span><input type="range" id="lightSpecSlider" 
-                                            min="0.0" max="1.0" step="0.05" value="1.0"/>
-                <br/>
-                <span>Shininess</span><input type="range" id="lightShinSlider" 
-                                             min="1" max="10" step="1"/>
+    <canvas id="myGLCanvas" width="800" height="800" style="display: block;"></canvas>
+        <subtitle style="color: white">This work produced for the UIUC course CS418 in Spring 2017.  On the off-chance you'd like to reproduce it, contact me at bcdang2@illinois.edu.</subtitle>
+        
+        <div id="controls">
+        </div>
+        
+        <div id="overlayDiv">
+            <div id="overlay-ControlsDiv">
+            </div><div id="overlay-SceneDiv" style="">
+                <h2>SCENE</h2>
+                <div id="scene-LightPosition" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                    <h3>Light Position</h3>
+                    <span>X</span><input type="range" id="lightXSlider" 
+                                        value="0.0" min="-15.0" max="15.0" step="0.05"/><br>
+                    <span>Y</span><input type="range" id="lightYSlider" 
+                                        value="15.0" min="-15.0" max="15.0" step="0.05"/><br>
+                    <span>Z</span><input type="range" id="lightZSlider" 
+                                        value="-15.0" min="-15.0" max="15.0" step="0.05"/><br>
+                </div>
+                <div id="scene-LightIntensities" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                    <h3>Light Intensities</h3>
+                    <span>Ambient</span><input type="range" id="lightAmbSlider" 
+                                            min="0.0" max="1.0" step="0.05" value="0.4"/>
+                    <br/>
+                    <span>Diffuse</span><input type="range" id="lightDifSlider" 
+                                            min="0.0" max="1.0" step="0.05" value="0.6"/>
+                    <br/>
+                    <span>Specular</span><input type="range" id="lightSpecSlider" 
+                                                min="0.0" max="1.0" step="0.05" value="1.0"/>
+                    <br/>
+                    <span>Shininess</span><input type="range" id="lightShinSlider" 
+                                                min="1" max="10" step="1"/>
+                </div>
             </div>
         </div>
-    </div>
+    </article>
 </body>
 
 </html>
