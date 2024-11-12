@@ -1,160 +1,170 @@
-<!DOCTYPE HTML> 
-<html lang="en"> 
+<!DOCTYPE HTML>
+<html lang="en">
 <head>
-<title>mp2 </title>
-<meta charset="utf-8"> 
-<style type="text/css">
-* {
-    font-family: -apple-system, BlinkMacSystemFont, 
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
-    "Fira Sans", "Droid Sans", "Helvetica Neue", 
-    sans-serif;
-}
-#debugDiv {
-    background: rgba(0, 0, 0, 0.4);
-    bottom: 0;
-    color: white;
-    display: block;
-    left: 0;
-    padding: 1em;
-    position: fixed;
-    width: 100%;
-    z-index: 2;
-}
-#debug-metricRoll, #debug-metricPitch, #debug-metricYaw {
-    display: inline-block;
-    float: left;
-    width: 33%;
-}
-#debug-metricLookAt, #debug-metricSpeed {
-    display: inline-block;
-    float: left;
-    width: 50%;
-    height: 140px;
-}
-</style>
-
-    
-<script id="shader-vs" type="x-shader/x-vertex">
-   attribute vec3 aVertexNormal;
-   attribute vec3 aVertexPosition;
-   attribute vec4 aVertexColor;
-   
-
-    uniform mat4 uMVMatrix;
-    uniform mat4 uPMatrix;
-    uniform mat3 uNMatrix;
-    
-    uniform vec3 uLightPosition;
-    
-    varying vec3 vertexPositionEye3;
-    varying vec3 L;
-    varying vec3 N;
-    
-    
-    varying vec4 vColor;
-
-    void main(void) {
-    
-    // Get the vertex position in eye coordinates
-    vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
-    vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
-    
-    //Calculate L dot N.
-    L = -normalize(vertexPositionEye3 - uLightPosition);
-    N = -normalize(uNMatrix * aVertexNormal);
-  
-    //Calculate ambTerm + difTerm + specTerm
-    vColor = aVertexColor;
-    
-     gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    <title>WebGL Flight Simulator — Brandon Dang</title>
+    <meta charset="utf-8">
+    <style type="text/css">
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, 
+        "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
+        "Fira Sans", "Droid Sans", "Helvetica Neue", 
+        sans-serif;
     }
-</script>
-  
-<script id="shader-fs1" type="x-shader/x-fragment">
-precision mediump float;
-varying vec4 vColor;
-varying vec3 vertexPositionEye3;
-varying vec3 L;
-varying vec3 N;
+    #debugDiv {
+        background: rgba(0, 0, 0, 0.4);
+        bottom: 0;
+        color: white;
+        display: block;
+        left: 0;
+        padding: 1em;
+        position: fixed;
+        width: 100%;
+        z-index: 2;
+    }
+    #debug-metricRoll, #debug-metricPitch, #debug-metricYaw {
+        display: inline-block;
+        float: left;
+        width: 33%;
+    }
+    #debug-metricLookAt, #debug-metricSpeed {
+        display: inline-block;
+        float: left;
+        width: 50%;
+        height: 140px;
+    }
+    </style>
 
-uniform vec3 uAmbientLightColor;
-uniform vec3 uDiffuseLightColor;
-uniform vec3 uSpecularLightColor;
-
-const float alpha = 256.0;
-
-void main(void) {
-        float ldotn = dot(L, N);
-
-        //Calculate R dot V to the alpha.
-        vec3 R = -normalize(reflect(-L, N));
-        vec3 V = -normalize(vertexPositionEye3);
-        float rdotv = dot(R, V);
-        float specWeight = pow(rdotv, alpha);
-
-        vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
-                 uDiffuseLightColor * ldotn +
-                 uSpecularLightColor * specWeight), 1.0);
-                 
-        const float LOGB2 = 1.442695;
-        const float fogDensity = 0.08;
-        float z = gl_FragCoord.z / gl_FragCoord.w;
-        float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
-        fogFactor = clamp(fogFactor, 0.0, 1.0);
-        vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
-         
-        gl_FragColor = mix(fogColor, vertColor, fogFactor);
-        
-        
- }
-</script>
-  
-<script id="shader-fs2" type="x-shader/x-fragment">
-precision mediump float;
-varying vec4 vColor;
-varying vec3 vertexPositionEye3;
-varying vec3 L;
-varying vec3 N;
-
-uniform vec3 uAmbientLightColor;
-uniform vec3 uDiffuseLightColor;
-uniform vec3 uSpecularLightColor;
-
-const float alpha = 128.0;
-
-void main(void) {
-    float ldotn = dot(L, N);
-
-    //Calculate R dot V to the alpha.
-    vec3 R = -normalize(reflect(-L, N));
-    vec3 V = -normalize(vertexPositionEye3);
-    float rdotv = dot(R, V);
-    float specWeight = pow(rdotv, alpha);
-
-    vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
-             uDiffuseLightColor * ldotn +
-             uSpecularLightColor * specWeight), 1.0);
-
-    gl_FragColor = vertColor;
- }
-</script>
+    <script id="shader-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
     
-<!--<script src="invert.js"></script>-->
-<script src="gl-matrix-min.js"></script> 
-<script src="webgl-utils.js"></script>
-<script src="simpleModeling.js"></script>   
-<script src="terrainModeling2.js"></script>  
-<script src="main.js"></script>  
-<script src="simulator2.js"></script>  
-<script src="typedarray.js"></script>
-<script src="simplex-noise.js"></script>
-<script src="alea.js"></script>
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+        
+        uniform vec3 uLightPosition;
+        
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+        
+        
+        varying vec4 vColor;
+
+        void main(void) {
+        
+        // Get the vertex position in eye coordinates
+        vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+        vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+        
+        //Calculate L dot N.
+        L = -normalize(vertexPositionEye3 - uLightPosition);
+        N = -normalize(uNMatrix * aVertexNormal);
+    
+        //Calculate ambTerm + difTerm + specTerm
+        vColor = aVertexColor;
+        
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        }
+    </script>
+
+    <script id="shader-fs1" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        uniform vec3 uAmbientLightColor;
+        uniform vec3 uDiffuseLightColor;
+        uniform vec3 uSpecularLightColor;
+
+        const float alpha = 256.0;
+
+        void main(void) {
+            float ldotn = dot(L, N);
+
+            //Calculate R dot V to the alpha.
+            vec3 R = -normalize(reflect(-L, N));
+            vec3 V = -normalize(vertexPositionEye3);
+            float rdotv = dot(R, V);
+            float specWeight = pow(rdotv, alpha);
+
+            vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
+                    uDiffuseLightColor * ldotn +
+                    uSpecularLightColor * specWeight), 1.0);
+                    
+            const float LOGB2 = 1.442695;
+            const float fogDensity = 0.08;
+            float z = gl_FragCoord.z / gl_FragCoord.w;
+            float fogFactor = exp2( -fogDensity * fogDensity * z * z * LOGB2);
+            fogFactor = clamp(fogFactor, 0.0, 1.0);
+            vec4 fogColor = vec4(148.0/255.0, 169.0/255.0, 200.0/255.0, 1.0);
+            
+            gl_FragColor = mix(fogColor, vertColor, fogFactor);
+        }
+    </script>
+
+    <script id="shader-fs2" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        uniform vec3 uAmbientLightColor;
+        uniform vec3 uDiffuseLightColor;
+        uniform vec3 uSpecularLightColor;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            float ldotn = dot(L, N);
+
+            //Calculate R dot V to the alpha.
+            vec3 R = -normalize(reflect(-L, N));
+            vec3 V = -normalize(vertexPositionEye3);
+            float rdotv = dot(R, V);
+            float specWeight = pow(rdotv, alpha);
+
+            vec4 vertColor = vec4((vec3(vColor) + uAmbientLightColor + 
+                    uDiffuseLightColor * ldotn +
+                    uSpecularLightColor * specWeight), 1.0);
+
+            gl_FragColor = vertColor;
+        }
+    </script>
+
+    <!--<script src="invert.js"></script>-->
+    <link rel="stylesheet" href="../../css/styles.css">
+    <script src="gl-matrix-min.js"></script>
+    <script src="webgl-utils.js"></script>
+    <script src="simpleModeling.js"></script>
+    <script src="terrainModeling2.js"></script>
+    <script src="main.js"></script>
+    <script src="simulator2.js"></script>
+    <script src="typedarray.js"></script>
+    <script src="simplex-noise.js"></script>
+    <script src="alea.js"></script>
 </head>
 <!--<script src="plotly-latest.min.js"></script>-->
 <body onload="startup();">
-    
-    <h5>Brandon Dang / Brandon Dang presents</h5>
+
+    <div id="main-header" class="collapsed">
+        <a id="header-back-button" href="..">← Home
+            <div id="header-logo">
+            <img id="logo-img" class="logo-img" 
+                    src="../../media/logo/header-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-hoverImg" class="logo-img" 
+                    src="../../media/logo/header-gradient.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-activeImg" class="logo-img" 
+                    src="../../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+        </div><h1>Brandon Dang</h1></a>
+    </div>
+        <article>
+            <h3 class="tag blueBG whiteText">Interactive Computer Graphics</h3>
     <h1>Flight Simulator</h1>
     <h2>Version 2.0: Now with Perlin-Noise-Generated Terrain!</h2>
     
@@ -209,6 +219,7 @@ void main(void) {
 
     <img src="../media/perlin-noise-2.png" alt="" class="gallery-right">
     <img src="../media/perlin-noise.png" alt="" class="gallery-right">
+    </article>
 </body>
 
 </html>
