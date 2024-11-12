@@ -1,0 +1,193 @@
+
+* {
+    background-clip: border-box;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 
+                 "Segoe UI", "Roboto", "Oxygen", 
+                 "Ubuntu", "Cantarell", "Fira Sans", 
+                 "Droid Sans", "Helvetica Neue", sans-serif;
+    transition: all 0.2s ease;
+    vertical-align: top;
+}
+body {
+    padding: 0;
+}
+h2 {
+    font-variant: small-caps; 
+    text-transform: lowercase;
+}
+input[type="range"] {
+    padding: 0.5em;
+}
+
+#overlayDiv {
+    background-color: rgba(0, 0, 0, 0.5);
+/*    bottom: 0;*/
+    color: white;
+    opacity: 0;
+    padding: 1em;
+/*    position: fixed;*/
+    vertical-align: top;
+    width: 100%;
+}
+
+#overlayDiv {
+    background-color: rgba(0, 0, 0, 0.5);
+/*    bottom: 0;*/
+    color: white;
+    opacity: 1;
+/*    position: fixed;*/
+    vertical-align: top;
+}
+
+#showHelpLabel {
+    cursor: pointer;
+    -webkit-user-select: none;  /* Chrome all / Safari all */
+    -moz-user-select: none;     /* Firefox all */
+    -ms-user-select: none;      /* IE 10+ */
+    user-select: none;          /* Likely future */ 
+    
+/*            border-radius: 0.2em;*/
+    background: hsla(60, 90%, 55%, 1);
+    display: inline-block;
+    padding: 10px;
+    padding-right: 40px;
+    margin-left: 1em;
+}
+
+/* CONTROLS */
+
+#overlay-ControlsDiv {
+    display: inline-block;
+    margin-right: 1em;
+    max-width: 540px;
+    top: 0;
+    vertical-align: top;
+    width: calc(50% - 2em);
+}
+
+
+.HUDKey {
+    transition: none; 
+    
+    border: 1px solid white;
+    border-radius: 0.4em;
+    display: inline-block;
+    height: 50px;
+    line-height: 50px;
+    margin-bottom: 5px;
+    overflow: hidden;
+    text-align: center;
+    width: 50px;
+}
+
+.HUDKey.activated {
+    transition: none;
+    
+    background-color: hsla(0, 100%, 100%, 0.8);
+    box-shadow: inset 0 4px 1px hsla(0, 0%, 0%, 0.5);
+    color: hsla(0, 0%, 0%, 0.8);
+    line-height: 54px;
+}
+
+/* SCENE */
+
+#overlay-SceneDiv {
+    display: inline-block;
+    margin-left: 1em;
+    max-width: 540px;
+    top: 0;
+    vertical-align: top;
+    width: 50%;
+}
+
+#overlay-SceneDiv >>> span {
+    padding-right: 2em;
+}
+
+/* FROM JSBIN.ZABEFUN.21 */
+
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	transition: all 0.1s ease;
+}
+
+#controls {
+	
+}
+
+
+#controls-sceneVariables, #controls-addParticles {
+	border: 1px solid black;
+	display: inline-block;
+	margin: none;
+	vertical-align: top;
+	padding: 1em;
+	width: calc(50% - 2.325em);
+}
+
+#controls-getStats {
+	border: 1px solid black;
+	margin-top: -1px;
+	padding: 0 1em 1em 1em;
+}
+
+.getStats-label, .sceneVariables-label {
+	color: gray;
+	display: inline-block;
+	font-size: 1em;
+	font-variant: small-caps;
+	text-transform: lowercase;
+}
+.getStats-value {
+	
+}
+
+
+@media (max-width: 1115px) and (min-width: 640px) {
+	#controls {
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		height: 100%;
+		right: 0;
+		padding: 0 1em ;
+		position: fixed;
+		top: 0;
+		width: 300px;
+	}
+	#controls > * {
+		border-color: white;
+	}
+	#controls-sceneVariables, #controls-addParticles {
+		border: 1px solid white;
+		display: block;
+		margin-top: -1px;
+		padding: 0 1em 1em 1em;
+		width: auto;
+	}
+	.getStats-label, .sceneVariables-label {
+		color: rgba(255, 255, 255, 0.5);
+	}
+	.sceneVariables-display {
+		color: white;
+	}
+}
+@media (min-width: 1116px) {
+	#controls {
+		height: 100%;
+		left: calc(800px + 2em);
+		padding: 0 1em 0 0;
+		position: absolute;
+		top: 0;
+		width: 300px;
+	}
+	#controls-sceneVariables, #controls-addParticles {
+		border: 1px solid black;
+		display: block;
+		margin-top: -1px;
+		padding: 0 1em 1em 1em;
+		width: auto;
+	}
+	#controls-getStats {
+		clear: left;
+	}

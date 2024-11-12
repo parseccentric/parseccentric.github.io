@@ -1,0 +1,277 @@
+<!DOCTYPE HTML> 
+<html lang="en"> 
+<!-- Head /*** 
+ *    ██╗  ██╗███████╗ █████╗ ██████╗ 
+ *    ██║  ██║██╔════╝██╔══██╗██╔══██╗
+ *    ███████║█████╗  ███████║██║  ██║
+ *    ██╔══██║██╔══╝  ██╔══██║██║  ██║
+ *    ██║  ██║███████╗██║  ██║██████╔╝
+ *    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ 
+ */-->
+<head>
+    <title>bcdang2 MP4</title>
+    <link rel="stylesheet" href="style.css" type="text/css" />
+    <meta charset="utf-8"> 
+
+    <!-- Ball Shaders /***
+    *    ████████╗███████╗██╗  ██╗████████╗██╗   ██╗██████╗ ███████╗
+    *    ╚══██╔══╝██╔════╝╚██╗██╔╝╚══██╔══╝██║   ██║██╔══██╗██╔════╝
+    *       ██║   █████╗   ╚███╔╝    ██║   ██║   ██║██████╔╝█████╗  
+    *       ██║   ██╔══╝   ██╔██╗    ██║   ██║   ██║██╔══██╗██╔══╝  
+    *       ██║   ███████╗██╔╝ ██╗   ██║   ╚██████╔╝██║  ██║███████╗
+    *       ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝╚══════╝
+    *                                                               
+    *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗   
+    *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝   
+    *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗   
+    *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║   
+    *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║   
+    *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝   
+    *                                                               
+    */-->
+    <script id="texturedBall-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat4 uNMatrix;
+        
+        varying vec3 vVertexNormal;
+        void main(void) {
+            vVertexNormal = aVertexNormal; 
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition,   1.0); 
+        }
+    </script>
+    
+    <script id="texturedBall-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        uniform samplerCube uCubeSampler; 
+        varying vec3 vVertexNormal; 
+
+        void main(void) {
+            gl_FragColor = textureCube(uCubeSampler,vVertexNormal);
+        }
+    </script>    
+    <!-- Phong Shaders /***
+    *    ██████╗ ██╗  ██╗ ██████╗ ███╗   ██╗ ██████╗             
+    *    ██╔══██╗██║  ██║██╔═══██╗████╗  ██║██╔════╝             
+    *    ██████╔╝███████║██║   ██║██╔██╗ ██║██║  ███╗            
+    *    ██╔═══╝ ██╔══██║██║   ██║██║╚██╗██║██║   ██║            
+    *    ██║     ██║  ██║╚██████╔╝██║ ╚████║╚██████╔╝            
+    *    ╚═╝     ╚═╝  ╚═╝ ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝             
+    *                                                            
+    *    ███████╗██╗  ██╗ █████╗ ██████╗ ███████╗██████╗ ███████╗
+    *    ██╔════╝██║  ██║██╔══██╗██╔══██╗██╔════╝██╔══██╗██╔════╝
+    *    ███████╗███████║███████║██║  ██║█████╗  ██████╔╝███████╗
+    *    ╚════██║██╔══██║██╔══██║██║  ██║██╔══╝  ██╔══██╗╚════██║
+    *    ███████║██║  ██║██║  ██║██████╔╝███████╗██║  ██║███████║
+    *    ╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝╚══════╝
+    *                                                            
+    */-->
+    <script id="phongBall-vs" type="x-shader/x-vertex">
+        attribute vec3 aVertexNormal;
+        attribute vec3 aVertexPosition;
+        attribute vec4 aVertexColor;
+
+        uniform mat4 uMVMatrix;
+        uniform mat4 uPMatrix;
+        uniform mat3 uNMatrix;
+
+        uniform vec3 uLightPosition;
+
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        varying vec4 vColor;
+
+        void main(void) {
+            //get the vertex position in eye coordinates
+            vec4 vertexPositionEye4 = uMVMatrix * vec4(aVertexPosition, 1.0);
+            vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+            
+            vec3 uLightPosition3 = vec3(uMVMatrix * vec4(uLightPosition, 0.0));
+
+            //calculate L dot N.
+            L = normalize(vertexPositionEye3 - uLightPosition3);
+            N = -normalize(uNMatrix * aVertexNormal);
+        
+            //send to fragment shader.
+            vColor = aVertexColor;
+            
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        }
+    </script>
+        
+    <script id="phongBall-fs" type="x-shader/x-fragment">
+        precision mediump float;
+        varying vec4 vColor;
+        varying vec3 vertexPositionEye3;
+        varying vec3 L;
+        varying vec3 N;
+
+        uniform vec3 uAmbientColor;
+        uniform vec3 uDiffuseColor;
+        uniform vec3 uSpecularColor;
+
+        const float alpha = 128.0;
+
+        void main(void) {
+            float ldotn = dot(L, N);//max(dot(L, N), 0.0);
+
+            //calculate R dot V to the alpha.
+            vec3 R = normalize(reflect(-L, N));
+            vec3 V = normalize(vertexPositionEye3);
+            float rdotv = max(dot(R, V), 0.0);
+            float specWeight = pow(rdotv, alpha);
+
+            vec4 vertColor = vec4((uAmbientColor + 
+                    uDiffuseColor * ldotn +
+                    uSpecularColor * specWeight), 1.0);
+            /* vec4 vertColor = vec4(1.0, 1.0, 1.0, 1.0); */
+
+            gl_FragColor = vertColor;
+        }
+    </script>
+        
+    <!-- Scripts /***
+    *
+    *    ███████╗ ██████╗██████╗ ██╗██████╗ ████████╗███████╗
+    *    ██╔════╝██╔════╝██╔══██╗██║██╔══██╗╚══██╔══╝██╔════╝
+    *    ███████╗██║     ██████╔╝██║██████╔╝   ██║   ███████╗
+    *    ╚════██║██║     ██╔══██╗██║██╔═══╝    ██║   ╚════██║
+    *    ███████║╚██████╗██║  ██║██║██║        ██║   ███████║
+    *    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝
+    */-->
+    <script src="debug.js"></script>  
+    <script src="gl-matrix.js"></script> 
+    <script src="gl-webgl-utils.js"></script>
+    <script src="helper-typedarray.js"></script>
+    <script src="modeling-sphere.js"></script>    
+    <script src="main.js"></script>  
+    <script src="main-input.js"></script>  
+    <script src="main-modules.js"></script>  
+    <script src="main-physics.js"></script>  
+    <script src="modeling-simplex-noise.js"></script>
+    <script src="modeling-alea.js"></script>
+    <script> window.addEventListener("load", startup); </script>
+</head>
+
+<!-- Document /***
+ *
+ *    ██████╗  ██████╗  ██████╗██╗   ██╗███╗   ███╗███████╗███╗   ██╗████████╗
+ *    ██╔══██╗██╔═══██╗██╔════╝██║   ██║████╗ ████║██╔════╝████╗  ██║╚══██╔══╝
+ *    ██║  ██║██║   ██║██║     ██║   ██║██╔████╔██║█████╗  ██╔██╗ ██║   ██║   
+ *    ██║  ██║██║   ██║██║     ██║   ██║██║╚██╔╝██║██╔══╝  ██║╚██╗██║   ██║   
+ *    ██████╔╝╚██████╔╝╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗██║ ╚████║   ██║   
+ *    ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝ 
+ */ -->
+<body>
+    <h4>Brandon Dang (bcdang2) presents</h4>
+    <h1 style="display: inline-block;">Particle Party</h1>
+    <!--
+    <label for="showHelpCheckbox" id="showHelpLabel">Show Help </label>
+    <input type="checkbox" id="showHelpCheckbox" checked/>
+-->
+    
+ <canvas id="myGLCanvas" width="800" height="800" style="display: block;"></canvas>
+    <subtitle style="color: white">This work produced for the UIUC course CS418 in Spring 2017.  On the off-chance you'd like to reproduce it, contact me at bcdang2@illinois.edu.</subtitle>
+    
+    <div id="controls">
+		
+		<div id="controls-instructions">
+			<h3>Instructions</h3>
+			<p>
+				Add particles by clicking the button below or by clicking the scene. The number of particles in the picker box will be added.  
+				<br>Clear all particles by pressing the button below or pressing the [0] key.
+				<br>Rotate the scene by pressing the arrow keys (up, down, left, right).
+			</p>
+		</div>
+		
+		<div id="controls-sceneVariables">
+			<h3>Scene Variables</h3>
+			<div id="sceneVariables-drag">
+				<label for="drag-slider" class="sceneVariables-label">
+					Drag: <span id="drag-display" class="sceneVariables-display">1.0</span>
+				</label>
+				<br><input type="range" id="drag-slider" 
+							 value="1.0" min="0.0" max="5.0" step="0.25"/>
+			</div>
+			<div id="sceneVariables-gravity" class="sceneVariables-label">
+				<label for="gravity-slider">
+					Gravity (m/s<sup>2</sup>): <span id="gravity-display" class="sceneVariables-display">9.81</span> 
+				</label>
+				<br><input type="range" id="gravity-slider" 
+							 value="9.810" min="-39.240" max="39.240" step="0.981" />
+			</div>
+			<div id="sceneVariables-speed">
+				<label for="speed-slider" class="sceneVariables-label">
+					Speed: <span id="speed-display" class="sceneVariables-display">1.0</span>
+				</label>
+				<br><input type="range" id="speed-slider" 
+							 value="1.0" min="0.0" max="5.0" step="0.25"/>
+			</div>
+		</div>
+		
+		<div id="controls-addParticles">
+			<h3>Particle Controls</h3>
+			<input type="number" id="addParticles-picker" 
+						 value="1" min="0" max="25" /> 
+			<button id="addParticles-button">
+				Add <span id="addParticles-display">-</span> Particle(s)
+			</button>
+			<button id="clearParticles-button">Clear All Particles</button>
+		</div>
+		
+		<div id="controls-getStats">
+			<h3>Statistics</h3>
+			<button id="getStats-button">Get Stats for Particle #
+				<input type="number" id="getStats-number" 
+							 value="1" min="1" max="4294967295" />
+			</button>
+			<p id="getStats-display1">
+				[Program not started; no particle data yet.]
+			</p>
+			<p id="getStats-display2">
+				[Program not started; no particle data yet.]
+			</p>
+		</div>
+		
+	</div>
+    
+    <div id="overlayDiv">
+        <div id="overlay-ControlsDiv">
+            <h2>Controls</h2>
+            <div id="cameraHUDDiv" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white;">
+                <h3>Camera</h3>
+                <h4>(<span id="cameraStats">0.0&deg;, 0.0&deg;, 0.0&deg; - default</span>)</h4>
+                <div id="cHUD-W" class="HUDKey" style="position: relative; left: 57px;">W</div>
+                <br>
+                <div id="cHUD-A" class="HUDKey">A</div>
+                <div id="cHUD-S" class="HUDKey">S</div>
+                <div id="cHUD-D" class="HUDKey">D</div>
+            </div>
+            <p id="instructionsText" style="">Use the WASD keys to orbit the scene.</p>
+        </div><div id="overlay-SceneDiv" style="">
+            <h2>SCENE</h2>
+            <div id="scene-LightPosition" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                <h3>Light Position</h3>
+                <span>X</span><input type="range" id="lightXSlider" value="0.0" min="-5.0" max="5.0" step="0.05"/><br>
+                <span>Y</span><input type="range" id="lightYSlider" value="10.0" min="-5.0" max="5.0" step="0.05"/><br>
+                <span>Z</span><input type="range" id="lightZSlider" value="0.0" min="-5.0" max="5.0" step="0.05"/><br>
+            </div>
+            <div id="scene-LightIntensities" style="display: inline-block; margin-right: 1em; padding: 1em;border: 1px solid white">
+                <h3>Light Intensities</h3>
+                <span>Ambient</span><input type="range" id="lightAmbSlider" min="0.0" max="1.0" step="0.05" value="0.1"/>
+                <br/>
+                <span>Diffuse</span><input type="range" id="lightDifSlider" min="0.0" max="1.0" step="0.05" value="0.8"/>
+                <br/>
+                <span>Specular</span><input type="range" id="lightSpecSlider" min="0.0" max="1.0" step="0.05" value="1.0"/>
+                <br/>
+                <span>Shininess</span><input type="range" id="lightShinSlider" min="1" max="10" step="1"/>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
