@@ -116,12 +116,13 @@
       text-shadow:  0 1px 1px rgba(0,0,0,0.9);
   }
   
-  .portfolio-flexChild h3{
+  .portfolio-flexChild h3 {
       bottom: 0;
       text-shadow: 0 3px 50px rgba(0,0,0,1);
       left: 0;
       margin: 0;
       padding: 0;
+      position: relative;
       text-align: left;
       width: 100%;
   }
@@ -137,3 +138,29 @@
       text-shadow:  0 1px 1px rgba(0,0,0,0.9);
   }
   
+.whiteText{
+    color:white
+}
+
+.whiteLinks a {
+    color:#FFF;
+}
+
+.whiteLinks a:hover {
+    color:#FFF;
+    filter:brightness(1.2);
+    top:-2px
+}
+
+.whiteLinks a:active{
+    text-shadow:0 0 0 rgba(255,255,255,0.1);
+    top:1px
+}
+
+.whiteLinks .chip:hover {
+    color: black;
+}
+
+.whiteLinks .chip:active {
+    color: black;
+}

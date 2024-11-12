@@ -30,6 +30,14 @@
     top:1px
 }
 
+.whiteLinks .chip:hover {
+    color: black;
+}
+
+.whiteLinks .chip:active {
+    color: black;
+}
+
 .blackText, h1.blackText, h2.blackText, h3.blackText, h4.blackText, p.blackText {
     color:black
 }
@@ -983,12 +991,4 @@ section {
 .chip:active {
     background: rgba(140, 140, 140, 0.5);
     transform: translate(2px, 0);
-}
-
-.whiteLinks .chip:hover {
-    color: black;
-}
-
-.whiteLinks .chip:active {
-    color: black;
 }
