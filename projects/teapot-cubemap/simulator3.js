@@ -81,16 +81,12 @@ function updateScene() {
 function updateIndicators() {
     document.getElementById("teapotStats").innerHTML = teapotX + "&deg;, " + 
         teapotY + "&deg;, " + teapotZ + "&deg;";
-    document.getElementById("cameraStats").innerHTML = worldX + "&deg;, " + 
-        worldY + "&deg;, " + worldZ + "&deg;";
+    document.getElementById("cameraStats").innerHTML = worldY + "&deg;";
     
     document.getElementById("tHUD-UA").classList.toggle("activated", (keyStati.arrowU == 1));
     document.getElementById("tHUD-DA").classList.toggle("activated", (keyStati.arrowD == 1));
     document.getElementById("tHUD-LA").classList.toggle("activated", (keyStati.arrowL == 1));
     document.getElementById("tHUD-RA").classList.toggle("activated", (keyStati.arrowR == 1));
-    
-    document.getElementById("cHUD-W").classList.toggle("activated", (keyStati.W == 1));
-    document.getElementById("cHUD-S").classList.toggle("activated", (keyStati.S == 1));
     document.getElementById("cHUD-A").classList.toggle("activated", (keyStati.A == 1));
     document.getElementById("cHUD-D").classList.toggle("activated", (keyStati.D == 1));
 }
