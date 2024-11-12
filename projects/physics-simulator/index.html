@@ -9,7 +9,7 @@
  *    ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ 
  */-->
 <head>
-    <title>bcdang2 MP4</title>
+    <title>WebGL Physics Simulator — Brandon Dang</title>
     <link rel="stylesheet" href="style.css" type="text/css" />
     <meta charset="utf-8"> 
 
@@ -143,15 +143,16 @@
     *    ███████║╚██████╗██║  ██║██║██║        ██║   ███████║
     *    ╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝   ╚══════╝
     */-->
-    <script src="debug.js"></script>  
-    <script src="gl-matrix.js"></script> 
+    <link rel="stylesheet" href="../../css/styles.css" type="text/css">
+    <script src="debug.js"></script>
+    <script src="gl-matrix.js"></script>
     <script src="gl-webgl-utils.js"></script>
     <script src="helper-typedarray.js"></script>
-    <script src="modeling-sphere.js"></script>    
-    <script src="main.js"></script>  
-    <script src="main-input.js"></script>  
-    <script src="main-modules.js"></script>  
-    <script src="main-physics.js"></script>  
+    <script src="modeling-sphere.js"></script>
+    <script src="main.js"></script>
+    <script src="main-input.js"></script>
+    <script src="main-modules.js"></script>
+    <script src="main-physics.js"></script>
     <script src="modeling-simplex-noise.js"></script>
     <script src="modeling-alea.js"></script>
     <script> window.addEventListener("load", startup); </script>
@@ -167,11 +168,23 @@
  *    ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝╚═╝  ╚═══╝   ╚═╝ 
  */ -->
 <body>
-    <h4>Brandon Dang (bcdang2) presents</h4>
-    <h1 style="display: inline-block;">Particle Party</h1>
-    <!--
-    <label for="showHelpCheckbox" id="showHelpLabel">Show Help </label>
-    <input type="checkbox" id="showHelpCheckbox" checked/>
+    <div id="main-header" class="collapsed">
+        <a id="header-back-button" href="../..">← Home
+            <div id="header-logo">
+            <img id="logo-img" class="logo-img" 
+                    src="../../media/logo/header-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-hoverImg" class="logo-img" 
+                    src="../../media/logo/header-gradient.png" alt="Logo: Birdleaf mark with 'BD'">
+            <img id="logo-activeImg" class="logo-img" 
+                    src="../../media/logo/birdleaf-flat.png" alt="Logo: Birdleaf mark with 'BD'">
+        </div><h1>Brandon Dang</h1></a>
+    </div>
+    <article>
+        <h2>Particle Party: WebGL Physics Simulator</h2>
+        <h3 class="tag blueBG whiteText">Physics Programming</h3>
+<!--
+<label for="showHelpCheckbox" id="showHelpLabel">Show Help </label>
+<input type="checkbox" id="showHelpCheckbox" checked/>
 -->
     
  <canvas id="myGLCanvas" width="800" height="800" style="display: block;"></canvas>
@@ -272,6 +285,7 @@
             </div>
         </div>
     </div>
+    </article>
 </body>
 
 </html>
