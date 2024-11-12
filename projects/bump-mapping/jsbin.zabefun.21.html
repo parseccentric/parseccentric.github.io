@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<!--
+Created using JS Bin
+http://jsbin.com
+
+Copyright (c) 2017 by parseccentric (http://jsbin.com/zabefun/21/edit)
+
+Released under the MIT license: http://jsbin.mit-license.org
+-->
+<meta name="robots" content="noindex">
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+<style id="jsbin-css">
+* {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+	transition: all 0.1s ease;
+}
+
+#controls {
+	
+}
+
+
+#controls-sceneVariables, #controls-addParticles {
+	border: 1px solid black;
+	display: inline-block;
+	height: 10em;
+	margin: none;
+	vertical-align: top;
+	padding: 1em;
+	width: calc(50% - 2.325em);
+}
+
+#controls-getStats {
+	border: 1px solid black;
+	margin-top: -1px;
+	padding: 0 1em 1em 1em;
+}
+
+.getStats-label, .sceneVariables-label {
+	color: gray;
+	display: inline-block;
+	font-size: 1em;
+	font-variant: small-caps;
+	text-transform: lowercase;
+}
+.getStats-value {
+	
+}
+
+
+@media (max-width: 719px) and (min-width: 640px) {
+	#controls {
+		background-color: rgba(0, 0, 0, 0.5);
+		color: white;
+		height: 100%;
+		right: 0;
+		padding: 0 1em ;
+		position: absolute;
+		top: 0;
+		width: 300px;
+	}
+	#controls > * {
+		border-color: white;
+	}
+	#controls-sceneVariables, #controls-addParticles {
+		border: 1px solid white;
+		display: block;
+		margin-top: -1px;
+		padding: 0 1em 1em 1em;
+		width: auto;
+	}
+	.getStats-label, .sceneVariables-label {
+		color: rgba(255, 255, 255, 0.5);
+	}
+	.sceneVariables-display {
+		color: white;
+	}
+}
+@media (min-width: 720px) {
+	#controls {
+		height: 100%;
+		right: 0;
+		padding: 0 1em 0 0;
+		position: absolute;
+		top: 0;
+		width: 300px;
+	}
+	#controls-sceneVariables, #controls-addParticles {
+		border: 1px solid black;
+		display: block;
+		margin-top: -1px;
+		padding: 0 1em 1em 1em;
+		width: auto;
+	}
+	#controls-getStats {
+		clear: left;
+	}
+}
+</style>
+</head>
+<body>
+	<canvas id="canvas" width="360px" height="360px"></canvas>
+	<div id="controls">
+		
+		<div id="controls-instructions">
+			<h3>Instructions</h3>
+			<p>
+				Add particles by clicking the button below, clicking the scene above, or pressing [spacebar]. The number of particles in the picker box will be added.  
+				<br>Clear all particles by pressing the button below or pressing the [0] key.
+				<br>Rotate the scene by pressing the arrow keys (up, down, left, right).
+			</p>
+		</div>
+		
+		<div id="controls-sceneVariables">
+			<h3>Scene Variables</h3>
+			<div id="sceneVariables-speed">
+				<label for="speed-slider" class="sceneVariables-label">
+					Speed: <span id="speed-display" class="sceneVariables-display">1.0</span>
+				</label>
+				<br><input type="range" id="speed-slider" 
+							 value="1.0" min="0.0" max="5.0" step="0.25"/>
+			</div>
+			<div id="sceneVariables-gravity" class="sceneVariables-label">
+				<label for="gravity-slider">
+					Gravity (m/s<sup>2</sup>): <span id="gravity-display" class="sceneVariables-display">9.81</span> 
+				</label>
+				<br><input type="range" id="gravity-slider" 
+							 value="9.810" min="-39.240" max="39.240" step="0.981" />
+			</div>
+		</div>
+		
+		<div id="controls-addParticles">
+			<h3>Particle Controls</h3>
+			<input type="number" id="addParticles-picker" 
+						 value="1" min="1" max="25" /> 
+			<button id="addParticles-button">
+				Add <span id="addParticles-display">-</span> Particle(s)
+			</button>
+			<button id="clearParticles-button">Clear All Particles</button>
+		</div>
+		
+		<div id="controls-getStats">
+			<h3>Statistics</h3>
+			<button id="getStats-button">Get Stats for Particle #
+				<input type="number" id="getStats-number" 
+							 value="1" min="1" max="4294967295" />
+			</button>
+			<p id="getStats-display1">
+				[Program not started; no particle data yet.]
+			</p>
+			<p id="getStats-display2">
+				[Program not started; no particle data yet.]
+			</p>
+		</div>
+		
+	</div>
+<script id="jsbin-javascript">
+/***
+ *    ███████╗ ██████╗███████╗███╗   ██╗███████╗
+ *    ██╔════╝██╔════╝██╔════╝████╗  ██║██╔════╝
+ *    ███████╗██║     █████╗  ██╔██╗ ██║ █████╗  
+ *    ╚════██║██║     ██╔══╝  ██║╚██╗██║██╔══╝  
+ *    ███████║╚██████╗███████╗██║ ╚████║███████╗
+ *    ╚══════╝ ╚═════╝╚══════╝╚═╝  ╚═══╝╚══════╝
+ *                                              
+ */
+var scene,
+		canvas,
+		addBalls,
+		clearBalls,
+		getStats;
+
+/***
+ *     █████╗ ██████╗ ██████╗ 
+ *    ██╔══██╗██╔══██╗██╔══██╗
+ *    ███████║██║  ██║██║  ██║
+ *    ██╔══██║██║  ██║██║  ██║
+ *    ██║  ██║██████╔╝██████╔╝
+ *    ╚═╝  ╚═╝╚═════╝ ╚═════╝ 
+ * 
+ */
+
+/** 
+ * Create a module that allows us to add balls to the scene.
+ */
+var addBallsModule = {
+	//variables
+	bounds: {
+		xMin: -1,
+		xMax: 1,
+		yMin: -1,
+		yMax: 1,
+		zMin: -1,
+		zMax: 1
+	},
+	button: null,
+	canvas: null,
+	display: null,
+	picker: null,
+	particles: null,
+	positions: null,
+	velocities: null,
+	//functions
+	appendParticles:
+	/**
+     * Adds n particles to particles, positions, velocities.
+     * @param {Number} n
+     */
+	function (callingObject, particles, positions, velocities, n) {
+		var bounds = callingObject.bounds;
+		for (var i = 0; i < n; i += 1) {
+			particles.push(particles.length);
+			positions.push(
+				[Math.random() * (bounds.xMax - bounds.xMin) + bounds.xMin,
+				 Math.random() * (bounds.yMax - bounds.yMin) + bounds.yMin,
+				 Math.random() * (bounds.zMax - bounds.zMin) + bounds.zMin]);
+			velocities.push([Math.random(), Math.random(), Math.random()]);
+		}
+		if(typeof getStats !== "undefined") {
+			getStats.updateMetrics(getStats);
+		}
+	},
+	updateMetrics:
+	/**
+		 *
+		 * @param {Number} n - number of particles to add
+		 */
+	function (callingObject) {
+		callingObject.display.innerHTML = callingObject.picker.value;
+	},
+	initialize:
+	/**
+		 *
+		 * @param {} canvas - DOM canvas object (not its ID).
+		 * @param {} display - DOM display object (not its ID).
+		 * @param {} slider - DOM slider object (not its ID).
+		 */
+	function(button, canvas, display, picker,
+						particles, positions, velocities) {
+		this.button = button;
+		this.canvas = canvas;
+		this.display = display;
+		this.picker = picker;
+		this.particles = particles;
+		this.positions = positions;
+		this.velocities = velocities;
+
+		var _this = this;
+		var DOMControls = [
+			{
+				element: window,
+				event: "load",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: button,
+				event: "click",
+				callback: function(event) {
+					_this.appendParticles(_this, _this.particles, _this.positions,
+																_this.velocities, _this.picker.value);
+				}
+			},
+			{
+				element: canvas,
+				event: "click",
+				callback: function() {
+					_this.appendParticles(_this, _this.particles, _this.positions,
+																_this.velocities, _this.picker.value);
+				}
+			},
+			{
+				element: picker,
+				event: "click",
+				callback: function(event) {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "change",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "keydown",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "keyup",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "keypress",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "mousemove",
+				callback: function() {
+					_this.updateMetrics(_this);
+				}
+			}
+		];
+		for(var i in DOMControls) {
+			var control = DOMControls[i];
+			control.element.addEventListener(control.event, control.callback);
+		}
+		return this;
+	}
+};
+
+/***
+ *     ██████╗██╗     ███████╗ █████╗ ██████╗ 
+ *    ██╔════╝██║     ██╔════╝██╔══██╗██╔══██╗
+ *    ██║     ██║     █████╗  ███████║██████╔╝
+ *    ██║     ██║     ██╔══╝  ██╔══██║██╔══██╗
+ *    ╚██████╗███████╗███████╗██║  ██║██║  ██║
+ *     ╚═════╝╚══════╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝
+ *                                            
+ */
+
+/** 
+ * Create a module that allows us to remove all balls from the scene.
+ */
+var clearBallsModule = {
+	//variables
+	button: null,
+	canvas: null,
+	particles: null,
+	positions: null,
+	velocities: null,
+	//functions
+	clearParticles:
+	/**
+			* Removes all particles from scene.
+			*/
+	function (callingObject) {
+		callingObject.particles.length = 0;
+		callingObject.positions.length = 0;
+		callingObject.velocities.length = 0;
+
+		if (typeof getStats !== 'undefined') {
+			getStats.updateMetrics(getStats);
+		}
+	},
+	initialize:
+	/**
+			* Creates the module to clear balls, setting up DOM events 
+			* and hooking everything up.
+			*/
+	function (canvas, button, particles, positions, velocities) {
+		var _this = this;
+		this.canvas = canvas;
+		this.button = button;
+		this.particles = particles;
+		this.positions = positions;
+		this.velocities = velocities;
+		var DOMControls = [
+			{
+				element: button,
+				event: "click",
+				callback: function() {
+					_this.clearParticles(_this);
+				}
+			}
+		];
+		for(var i in DOMControls) {
+			var control = DOMControls[i];
+			control.element.addEventListener(control.event, control.callback);
+		}
+		return this;
+	}
+};
+
+/***
+ *    ███████╗████████╗ █████╗ ████████╗███████╗
+ *    ██╔════╝╚══██╔══╝██╔══██╗╚══██╔══╝██╔════╝
+ *    ███████╗   ██║   ███████║   ██║   ███████╗
+ *    ╚════██║   ██║   ██╔══██║   ██║   ╚════██║
+ *    ███████║   ██║   ██║  ██║   ██║   ███████║
+ *    ╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝
+ *                                              
+ */
+
+/**
+ * Create a module that allows us to poll the scene and debug particles.
+ */
+var getStatsModule = {
+	//variables
+	button: null,
+	displays: null,
+	picker: null,
+	stats: null,
+	index: 1,
+	particles: null,
+	positions: null,
+	velocities: null,
+	//functions
+	updateMetrics:
+	function (callingObject) {
+		callingObject.picker.max = callingObject.particles.length.toString();
+		for (var i in callingObject.displays) {
+			callingObject.displays[i].innerHTML = "";
+		}
+		for (var i in callingObject.stats) {
+			callingObject.displays[callingObject.stats[i].which].innerHTML += 
+				"<span class=\"getStats-label\">" + callingObject.stats[i].label +
+				"</span>" + ": <br>" + callingObject.stats[i].routine(callingObject);
+		}
+	},
+	initialize:
+	function (button, displays, picker, particles, positions, velocities) {
+		var _this = this;
+
+		this.button = button;
+		this.displays = displays;
+		this.picker = picker;
+		this.particles = particles;
+		this.positions = positions;
+		this.velocities = velocities;
+
+		var DOMControls = [
+			{
+				element: window,
+				event: "load",
+				callback: function () {
+					_this.index = picker.value;
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: button,
+				event: "click",
+				callback: function () {
+					_this.index = picker.value;
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: button,
+				event: "mousedown",
+				callback: function () {
+					_this.index = picker.value;
+					_this.updateMetrics(_this);
+				}
+			},
+			{
+				element: picker,
+				event: "mousemove",
+				callback: function () {
+					_this.index = picker.value;
+				}
+			},
+			{
+				element: picker,
+				event: "change",
+				callback: function () {
+					_this.index = picker.value;
+				}
+			}
+		];
+
+		for(var i in DOMControls) {
+			var control = DOMControls[i];
+			control.element.addEventListener(control.event, control.callback);
+		}
+
+		_this.stats = [
+			{ 
+				which: 0,
+				label: "Number of Particles",
+				routine: function (callingObject) {
+					return callingObject.particles.length + "<br>";
+				}
+			},
+			{
+				which: 0,
+				label: "Average Position",
+				routine: function (callingObject) {
+					if(callingObject.particles.length == 0) {
+						return "[N/A]<br>";
+					}
+					var sum = [0.0, 0.0, 0.0];
+					for (var i = 0; i < callingObject.positions.length; i += 1) {
+						sum[0] += callingObject.positions[i][0];
+						sum[1] += callingObject.positions[i][1];
+						sum[2] += callingObject.positions[i][2];
+					}
+					return "(" + (sum[0] / callingObject.particles.length).toFixed(2) + ", " +
+						(sum[1] / callingObject.particles.length).toFixed(2) + ", " + 
+						(sum[2] / callingObject.particles.length).toFixed(2) + ")<br>";
+				}
+			},
+			{
+				which: 0,
+				label: "Average Velocity",
+				routine: function (callingObject) {
+					if(callingObject.particles.length == 0) {
+						return "[N/A]<br>";
+					}
+					var sum = [0.0, 0.0, 0.0];
+					for (var i = 0; i < velocities.length; i += 1) {
+						sum[0] += callingObject.velocities[i][0];
+						sum[1] += callingObject.velocities[i][1];
+						sum[2] += callingObject.velocities[i][2];
+					}
+					return "(" + (sum[0] / callingObject.particles.length).toFixed(2) + ", " +
+						(sum[1] / callingObject.particles.length).toFixed(2) + ", " +
+						(sum[2] / callingObject.particles.length).toFixed(2) + ")<br>";
+				}
+			},
+			{
+				which: 1,
+				label: "Sampled Position",
+				routine: function (callingObject) {
+					if(callingObject.particles.length == 0) {
+						return "[N/A]<br>";
+					}
+					var index = callingObject.index;
+					return "Particle #" + index + ": (" +
+						callingObject.positions[index - 1][0].toFixed(2) + ", " +
+						callingObject.positions[index - 1][1].toFixed(2) + ", " +
+						callingObject.positions[index - 1][2].toFixed(2) + ")<br>";
+				}
+			},
+			{
+				which: 1,
+				label: "Sampled Velocity",
+				routine: function (callingObject) {
+					if(callingObject.particles.length == 0) {
+						return "[N/A]<br>";
+					}
+					var index = callingObject.index;
+					return "Particle #" + index + ": (" +
+						callingObject.velocities[index - 1][0].toFixed(2) + ", " +
+						callingObject.velocities[index - 1][1].toFixed(2) + ", " +
+						callingObject.velocities[index - 1][2].toFixed(2) + ")<br>";
+				}
+			}
+		];
+		return this;
+	} //end of initialize function
+};
+
+/***
+ *    ███████╗████████╗ █████╗ ██████╗ ████████╗
+ *    ██╔════╝╚══██╔══╝██╔══██╗██╔══██╗╚══██╔══╝
+ *    ███████╗   ██║   ███████║██████╔╝   ██║   
+ *    ╚════██║   ██║   ██╔══██║██╔══██╗   ██║   
+ *    ███████║   ██║   ██║  ██║██║  ██║   ██║   
+ *    ╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝   
+ *                                              
+ */
+
+function initSceneAndModules() {
+	scene = {
+		particles: [],
+		positions: [],
+		velocities: []
+	};
+
+	canvas = document.getElementById("canvas");
+
+	addBalls = addBallsModule.initialize(
+		document.getElementById("addParticles-button"),
+		canvas,
+		document.getElementById("addParticles-display"),
+		document.getElementById("addParticles-picker"),
+		scene.particles, scene.positions,
+		scene.velocities);
+
+	clearBalls = clearBallsModule.initialize(
+		canvas,
+		document.getElementById("clearParticles-button"),
+		scene.particles, scene.positions,
+		scene.velocities);
+
+	getStats = getStatsModule.initialize(
+		document.getElementById("getStats-button"),
+		[
+			document.getElementById("getStats-display1"),
+			document.getElementById("getStats-display2")
+		],
+		document.getElementById("getStats-number"),
+		scene.particles, scene.positions,
+		scene.velocities);
+}
+
+initSceneAndModules();
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>
